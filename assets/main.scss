@@ -116,6 +116,8 @@ $link-decoration: none;
  */
 
 body {
+	transition: 0.5s all ease;
+
 	&.page-template-page-full {
 		#main {
 			max-width: 100%;
@@ -137,6 +139,32 @@ body {
 				content: '\270E';
 				display: inline-block;
 				margin-right: 5px;
+			}
+		}
+	}
+
+	&.dark-mode {
+		background-color: black;
+		color: white;
+		transition: 0.5s all ease;
+
+		a {
+			color: white;
+
+			&:hover {
+				color: white;
+			}
+		}
+
+		#header {
+			img {
+				filter: invert(1);
+			}
+
+			.navbar-toggler {
+				.navbar-toggler-line {
+					background-color: white;
+				}
 			}
 		}
 	}
@@ -170,6 +198,7 @@ img {
 /* Header */
 
 #header {
+	background: transparent;
 	padding: 16px 0;
 
 	.search-form {
@@ -266,6 +295,7 @@ img {
 		flex-direction: column;
 		gap: 10px;
 		z-index: 10;
+		transition: 0.5s all ease;
 
 		&:focus,
 		&:focus-visible,
@@ -314,7 +344,7 @@ img {
 /* Main */
 
 #main {
-	margin-top: $spacer;
+	// margin-top: $spacer;
 }
 
 /* Footer */
