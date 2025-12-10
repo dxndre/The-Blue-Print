@@ -181,8 +181,40 @@ img {
 		height: 35px;
 	}
 
+	#searchCollapse {
+		position: relative;
+		top: -64px;
+		left: 64px;
+		opacity: 0;
+		display: block;
+		pointer-events: none;
+		transition: 0.3s all ease-in-out;
+
+		&.show {
+			pointer-events: all;
+			opacity: 1;
+			transition: 0.3s all ease-in-out;
+		}
+
+		form {
+			.input-group {
+				input {
+					border: none;
+					border-radius: 0;
+					box-shadow: none;
+					padding: 12px 20px;
+					padding-left: 0;
+					border-bottom: 1px solid;
+					width: 350px;
+					font-size: 20px;
+				}
+			}
+		}
+	}
+
 	#navbar {
-		background: white;
+		background: rgba(255,255,255,0.875);
+		backdrop-filter: blur(40px);
 		box-shadow: 0 0 50px -35px rgba(0, 0, 0, 0.75);
 		padding: 40px;
 		position: fixed;
@@ -195,11 +227,11 @@ img {
 		right: -400px;
 		justify-content: center;
 		align-items: start;
-		transition: 0.3s all ease-in-out;
+		transition: 0.7s all ease;
 
 		&.show {
 			right: 0;
-			transition: right 0.3s ease-in-out;
+			transition: 0.3s all ease;
 		}
 
 		h3 {
@@ -216,10 +248,10 @@ img {
 				a {
 					padding: 14px 0;
 					border-bottom: 1px solid rgba(0, 0, 0, 0.125);
-					transition: 0.3s all ease;
+					transition: 0.7s all ease;
 
 					&:hover {
-						border-bottom: 1px solid black;
+						border-bottom: 1px solid rgba(0, 0, 0, 0.75);
 						transition: 0.3s all ease;
 					}
 				}

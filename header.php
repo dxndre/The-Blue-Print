@@ -52,11 +52,11 @@
 				</div>
 
 				<?php if ( '1' === $search_enabled ) : ?>
-					<div id="searchCollapse" class="collapse mt-2">
-						<form class="search-form my-2" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+					<div id="searchCollapse" class="collapse">
+						<form class="search-form" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
 							<div class="input-group">
 								<input type="text" name="s" class="form-control" placeholder="<?php esc_attr_e( 'Search', 'the-blue-print' ); ?>" title="<?php esc_attr_e( 'Search', 'the-blue-print' ); ?>" />
-								<button type="submit" name="submit" class="btn btn-outline-secondary"><?php esc_html_e( 'Search', 'the-blue-print' ); ?></button>
+								<!-- <button type="submit" name="submit" class="btn btn-outline-secondary"><?php esc_html_e( 'Search', 'the-blue-print' ); ?></button> -->
 							</div>
 						</form>
 					</div>
