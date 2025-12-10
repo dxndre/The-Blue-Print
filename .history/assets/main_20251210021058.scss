@@ -170,7 +170,7 @@ img {
 /* Header */
 
 #header {
-	padding: 16px 0;
+	padding: 12px 0;
 
 	.search-form {
 		min-width: 250px;
@@ -181,59 +181,12 @@ img {
 		height: 35px;
 	}
 
-	#navbar {
-		background: white;
-		box-shadow: 0 0 50px -35px rgba(0, 0, 0, 0.75);
-		padding: 40px;
-		position: fixed;
-		width: 400px;
-		display: flex;
-		flex-direction: column;
-		gap: 4em;
-		height: 100vh;
-		top: 0;
-		right: -400px;
-		justify-content: center;
-		align-items: start;
-		transition: 0.3s all ease-in-out;
-
-		&.show {
-			right: 0;
-			transition: right 0.3s ease-in-out;
-		}
-
-		h3 {
-			text-align: left;
-			margin-bottom: 0;
-			font-size: 24px;
-		}
-
-		ul {
-			width: 100%;
-			// gap: 12px;
-
-			li {
-				a {
-					padding: 14px 0;
-					border-bottom: 1px solid rgba(0, 0, 0, 0.125);
-					transition: 0.3s all ease;
-
-					&:hover {
-						border-bottom: 1px solid black;
-						transition: 0.3s all ease;
-					}
-				}
-			}
-		}
-	}
-
 	.navbar-toggler {
 		border: none;
 		padding: 0;
 		display: flex;
 		flex-direction: column;
 		gap: 10px;
-		z-index: 10;
 
 		&:focus,
 		&:focus-visible,

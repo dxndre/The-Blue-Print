@@ -25,7 +25,7 @@
 			<div class="container">
 				<div class="d-flex w-100 align-items-center">
 					<?php if ( '1' === $search_enabled ) : ?>
-						<button class="btn btn-link p-0" id="searchToggle" type="button" data-bs-toggle="collapse" data-bs-target="#searchCollapse" aria-controls="searchCollapse" aria-expanded="false" aria-label="<?php esc_attr_e( 'Toggle search', 'the-blue-print' ); ?>">
+						<button class="btn btn-link p-0 me-3" id="searchToggle" type="button" data-bs-toggle="collapse" data-bs-target="#searchCollapse" aria-controls="searchCollapse" aria-expanded="false" aria-label="<?php esc_attr_e( 'Toggle search', 'the-blue-print' ); ?>">
 							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/search.png' ); ?>" alt="<?php esc_attr_e( 'Search', 'the-blue-print' ); ?>" class="search-icon" />
 						</button>
 					<?php endif; ?>
@@ -63,7 +63,6 @@
 				<?php endif; ?>
 
 				<div id="navbar" class="collapse navbar-collapse">
-					<h3>Menu</h3>
 					<?php
 						// Loading WordPress Custom Menu (theme_location).
 						wp_nav_menu(

@@ -63,7 +63,6 @@
 				<?php endif; ?>
 
 				<div id="navbar" class="collapse navbar-collapse">
-					<h3>Menu</h3>
 					<?php
 						// Loading WordPress Custom Menu (theme_location).
 						wp_nav_menu(

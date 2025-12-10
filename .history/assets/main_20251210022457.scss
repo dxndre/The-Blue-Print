@@ -194,7 +194,6 @@ img {
 		top: 0;
 		right: -400px;
 		justify-content: center;
-		align-items: start;
 		transition: 0.3s all ease-in-out;
 
 		&.show {
@@ -204,8 +203,6 @@ img {
 
 		h3 {
 			text-align: left;
-			margin-bottom: 0;
-			font-size: 24px;
 		}
 
 		ul {
@@ -216,12 +213,6 @@ img {
 				a {
 					padding: 14px 0;
 					border-bottom: 1px solid rgba(0, 0, 0, 0.125);
-					transition: 0.3s all ease;
-
-					&:hover {
-						border-bottom: 1px solid black;
-						transition: 0.3s all ease;
-					}
 				}
 			}
 		}
