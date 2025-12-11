@@ -171,171 +171,19 @@ body {
 	}
 
 	section {
-		margin: 4em 0;
-
 		&.shop-cta-section {
-			// margin: 4em 0;
+			margin: 4em 0;
 
 			.wp-block-columns {
 				align-items: center;
 				gap: 0;
-				margin-top: 2em;
 
 				.wp-block-cover {
 					padding: 25px;
 					align-items: end;
 
-					img {
-						transform: scale(1);
-						transition: 0.5s all ease;
-					}
-
 					p {
 						margin: 0;
-					}
-
-					&:hover {
-						img {
-							transform: scale(1.05);
-							transition: 0.3s all ease;
-						}
-					}
-				}
-			}
-		}
-
-		&.contact-form-section {
-			form {
-				display: flex;
-				flex-direction: column;
-
-				.form-label {
-					display: none;
-				}
-
-				input,
-				textarea {
-					padding: 12px;
-					font-size: 16px;
-					border: none;
-					transition: 0.3s all ease;
-				}
-
-				input {
-					padding-left: 0;
-					border-bottom: 1px solid rgba(0, 0, 0, 0.5);
-					transition: 0.3s all ease;
-
-					&:hover,
-					&:focus,
-					&:focus-within {
-						border-bottom: 1px solid rgba(0, 0, 0, 1);
-						outline: none;
-						box-shadow: none;
-						transition: 0.3s all ease;
-					}
-
-					&[type="checkbox"] {
-						// position: absolute;
-						height: 40px;
-						width: 40px;
-					}
-
-					&[type="submit"] {
-						background: black;
-						color: white;
-						width: 150px;
-						text-align: center;
-						padding: 12px;
-						border: 1px solid black;
-						transition: 0.3s all ease;
-
-						&:hover {
-							background: white;
-							color: black;
-							border: 1px solid black;
-							transition: 0.3s all ease;
-						}
-					}
-				}
-
-				textarea {
-					border: 1px solid rgba(0, 0, 0, 0.5);
-					resize: vertical;
-					transition: 0.3s all ease;
-
-					&:hover,
-					&:focus,
-					&:focus-within {
-						border: 1px solid rgba(0, 0, 0, 1);
-						outline: none;
-						box-shadow: none;
-						transition: 0.3s all ease;
-					}
-				}
-
-				.top-side {
-					display: flex;
-					flex-direction: row;
-					gap: 2em;
-				}
-
-				.bottom-side {
-					display: flex;
-
-					.bottom-left-side,
-					.bottom-right-side {
-						display: flex;
-					}
-
-					.bottom-left-side {
-						flex: 1;
-					}
-					.bottom-right-side {
-						flex: 1;
-					}
-				}
-			}
-		}
-
-		&.faqs-section {
-			#faqAccordion {
-				.accordion-item {
-					border: none;
-					border-bottom: 1px solid rgba(0, 0, 0, 0.5);
-					transition: 0.3s all ease;
-
-					&:hover {
-						border-bottom: 1px solid rgba(0, 0, 0, 0.75);
-						transition: 0.3s all ease;
-					}
-
-					&:first-of-type,
-					&:last-of-type {
-						.accordion-button {
-							border-radius: 0;
-						}
-					}
-
-					&:last-of-type {
-						border-bottom: none;
-						border-radius: 0;
-					}
-
-					.accordion-button {
-						// padding-left: 0;
-
-						&:focus,
-						&:focus-within {
-							box-shadow: none;
-							outline: none;
-						}
-
-						&[aria-expanded="true"] {
-							background-color: rgba(0, 0, 0, 0.125);
-							color: black;
-							transition: 0.3s all ease;
-						}
 					}
 				}
 			}
@@ -373,7 +221,6 @@ img {
 #header {
 	background: transparent;
 	padding: 16px 0;
-	height: 100px;
 
 	.search-form {
 		min-width: 250px;
@@ -402,7 +249,6 @@ img {
 		form {
 			.input-group {
 				input {
-					background-color: transparent;
 					border: none;
 					border-radius: 0;
 					box-shadow: none;
@@ -501,24 +347,6 @@ img {
 				&:nth-of-type(3) {
 					transform: translateY(-11px) rotate(-45deg);
 				}
-			}
-		}
-	}
-
-	&.scrolled {
-		background-color: #fff;
-		box-shadow: 0px 0px 50px -35px black;
-		transition: 0.5s all ease;
-
-		img {
-			filter: none;
-			transition: 0.5s all ease;
-		}
-
-		.navbar-toggler {
-			.navbar-toggler-line {
-				background-color: black;
-				transition: 0.5s all ease;
 			}
 		}
 	}

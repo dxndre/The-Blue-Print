@@ -216,127 +216,12 @@ body {
 				input,
 				textarea {
 					padding: 12px;
-					font-size: 16px;
-					border: none;
-					transition: 0.3s all ease;
-				}
-
-				input {
 					padding-left: 0;
-					border-bottom: 1px solid rgba(0, 0, 0, 0.5);
-					transition: 0.3s all ease;
-
-					&:hover,
-					&:focus,
-					&:focus-within {
-						border-bottom: 1px solid rgba(0, 0, 0, 1);
-						outline: none;
-						box-shadow: none;
-						transition: 0.3s all ease;
-					}
-
-					&[type="checkbox"] {
-						// position: absolute;
-						height: 40px;
-						width: 40px;
-					}
-
-					&[type="submit"] {
-						background: black;
-						color: white;
-						width: 150px;
-						text-align: center;
-						padding: 12px;
-						border: 1px solid black;
-						transition: 0.3s all ease;
-
-						&:hover {
-							background: white;
-							color: black;
-							border: 1px solid black;
-							transition: 0.3s all ease;
-						}
-					}
-				}
-
-				textarea {
-					border: 1px solid rgba(0, 0, 0, 0.5);
-					resize: vertical;
-					transition: 0.3s all ease;
-
-					&:hover,
-					&:focus,
-					&:focus-within {
-						border: 1px solid rgba(0, 0, 0, 1);
-						outline: none;
-						box-shadow: none;
-						transition: 0.3s all ease;
-					}
 				}
 
 				.top-side {
 					display: flex;
 					flex-direction: row;
-					gap: 2em;
-				}
-
-				.bottom-side {
-					display: flex;
-
-					.bottom-left-side,
-					.bottom-right-side {
-						display: flex;
-					}
-
-					.bottom-left-side {
-						flex: 1;
-					}
-					.bottom-right-side {
-						flex: 1;
-					}
-				}
-			}
-		}
-
-		&.faqs-section {
-			#faqAccordion {
-				.accordion-item {
-					border: none;
-					border-bottom: 1px solid rgba(0, 0, 0, 0.5);
-					transition: 0.3s all ease;
-
-					&:hover {
-						border-bottom: 1px solid rgba(0, 0, 0, 0.75);
-						transition: 0.3s all ease;
-					}
-
-					&:first-of-type,
-					&:last-of-type {
-						.accordion-button {
-							border-radius: 0;
-						}
-					}
-
-					&:last-of-type {
-						border-bottom: none;
-						border-radius: 0;
-					}
-
-					.accordion-button {
-						// padding-left: 0;
-
-						&:focus,
-						&:focus-within {
-							box-shadow: none;
-							outline: none;
-						}
-
-						&[aria-expanded="true"] {
-							background-color: rgba(0, 0, 0, 0.125);
-							color: black;
-							transition: 0.3s all ease;
-						}
-					}
 				}
 			}
 		}

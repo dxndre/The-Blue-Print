@@ -310,18 +310,6 @@ body {
 						transition: 0.3s all ease;
 					}
 
-					&:first-of-type,
-					&:last-of-type {
-						.accordion-button {
-							border-radius: 0;
-						}
-					}
-
-					&:last-of-type {
-						border-bottom: none;
-						border-radius: 0;
-					}
-
 					.accordion-button {
 						// padding-left: 0;
 
@@ -333,7 +321,7 @@ body {
 
 						&[aria-expanded="true"] {
 							background-color: rgba(0, 0, 0, 0.125);
-							color: black;
+							// color: white;
 							transition: 0.3s all ease;
 						}
 					}

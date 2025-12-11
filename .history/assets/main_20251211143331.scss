@@ -310,16 +310,10 @@ body {
 						transition: 0.3s all ease;
 					}
 
-					&:first-of-type,
-					&:last-of-type {
+					&:first-of-type {
 						.accordion-button {
 							border-radius: 0;
 						}
-					}
-
-					&:last-of-type {
-						border-bottom: none;
-						border-radius: 0;
 					}
 
 					.accordion-button {

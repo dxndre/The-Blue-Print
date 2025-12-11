@@ -562,26 +562,3 @@ function the_blue_print_scripts_loader() {
 	}
 }
 add_action( 'wp_enqueue_scripts', 'the_blue_print_scripts_loader' );
-
-
-// Space Grotesk Font
-
-function mytheme_enqueue_assets() {
-
-    // Google Font: Space Grotesk
-    wp_enqueue_style(
-        'mytheme-space-grotesk',
-        'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap',
-        array(),
-        null
-    );
-
-    // Your main stylesheet
-    wp_enqueue_style(
-        'mytheme-style',
-        get_stylesheet_uri(),
-        array(),
-        wp_get_theme()->get('Version')
-    );
-}
-add_action('wp_enqueue_scripts', 'mytheme_enqueue_assets');
