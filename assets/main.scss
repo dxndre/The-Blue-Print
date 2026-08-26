@@ -511,7 +511,7 @@ img {
 		transition: 0.5s all ease;
 
 		img {
-			filter: none;
+			filter: invert(1);
 			transition: 0.5s all ease;
 		}
 
@@ -522,11 +522,20 @@ img {
 			}
 		}
 	}
+
+	&:not(.scrolled) {
+		img {
+			filter: invert(0);
+			transition: 0.5s all ease;
+		}
+	}
 }
 
 .navbar-brand {
 	img {
 		height: 60px;
+		filter: invert(0);
+		transition: 0.5s all ease;
 	}
 }
 
@@ -544,15 +553,42 @@ img {
 
 #footer {
 	background-color: #fff;
+	padding: 0 40px;
+	margin-bottom: 20px;
 
 	p {
-		margin-top: 10px;
+		margin: 0;
+		font-size: 12px;
+		text-transform: uppercase;
+
+		a {
+			color: black;
+			border-bottom: 1px solid black;
+		}
+		
 	}
 
 	.menu-item {
 		a {
 			&[aria-current='page'] {
 				color: $link-hover-color;
+			}
+		}
+	}
+
+	.social-icons {
+		li {
+			margin-left: 10px;
+
+			a {
+				color: black;
+				font-size: 1.5em;
+				transition: 0.3s all ease;
+
+				&:hover {
+					color: $link-hover-color;
+					transition: 0.3s all ease;
+				}
 			}
 		}
 	}
