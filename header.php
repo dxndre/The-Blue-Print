@@ -23,60 +23,150 @@
 	<header>
 		<nav id="header" class="navbar <?php if ( isset( $navbar_position ) && 'fixed_top' === $navbar_position ) : echo ' fixed-top'; elseif ( isset( $navbar_position ) && 'fixed_bottom' === $navbar_position ) : echo ' fixed-bottom'; endif; if ( is_home() || is_front_page() ) : echo ' home'; endif; ?>">
 			<div class="container">
-				<div class="d-flex w-100 align-items-center">
-					<?php if ( '1' === $search_enabled ) : ?>
-						<button class="btn btn-link p-0" id="searchToggle" type="button" data-bs-toggle="collapse" data-bs-target="#searchCollapse" aria-controls="searchCollapse" aria-expanded="false" aria-label="<?php esc_attr_e( 'Toggle search', 'the-blue-print' ); ?>">
-							<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/search.png' ); ?>" alt="<?php esc_attr_e( 'Search', 'the-blue-print' ); ?>" class="search-icon" />
-						</button>
-					<?php endif; ?>
+				<?php
+					$header_logo = get_theme_mod( 'header_logo' );
+				?>
 
-					<a class="navbar-brand mx-auto order-2 text-center" href="<?php echo esc_url( home_url() ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home">
+				<!-- Desktop header -->
+				<div class="header-desktop">
+					<nav
+						class="header-desktop__left"
+						aria-label="<?php esc_attr_e( 'Primary navigation', 'the-blue-print' ); ?>"
+					>
 						<?php
-							$header_logo = get_theme_mod( 'header_logo' ); // Get custom meta-value.
-
-							if ( ! empty( $header_logo ) ) :
-							?>
-								<img src="<?php echo esc_url( $header_logo ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" />
-							<?php
-							else :
-								echo esc_attr( get_bloginfo( 'name', 'display' ) );
-							endif;
+							wp_nav_menu(
+								array(
+									'menu_class'     => 'header-menu',
+									'container'      => false,
+									'fallback_cb'    => false,
+									'depth'          => 1,
+									'theme_location' => 'header-left',
+								)
+							);
 						?>
+					</nav>
+
+					<a
+						class="navbar-brand header-logo"
+						href="<?php echo esc_url( home_url( '/' ) ); ?>"
+						aria-label="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>"
+						rel="home"
+					>
+						<?php if ( ! empty( $header_logo ) ) : ?>
+							<img
+								src="<?php echo esc_url( $header_logo ); ?>"
+								alt="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>"
+							/>
+						<?php else : ?>
+							<?php echo esc_html( get_bloginfo( 'name', 'display' ) ); ?>
+						<?php endif; ?>
 					</a>
 
-					<button class="navbar-toggler order-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="<?php esc_attr_e( 'Toggle navigation', 'the-blue-print' ); ?>">
+					<?php if ( has_nav_menu( 'header-right' ) ) : ?>
+						<nav
+							class="header-desktop__right"
+							aria-label="<?php esc_attr_e( 'Utility navigation', 'the-blue-print' ); ?>"
+						>
+							<?php
+							wp_nav_menu(
+								array(
+									'theme_location' => 'header-right',
+									'container'      => false,
+									'menu_class'     => 'header-menu header-menu--right',
+									'menu_id'        => 'header-right-menu',
+									'fallback_cb'    => false,
+									'depth'          => 1,
+								)
+							);
+							?>
+						</nav>
+					<?php else : ?>
+						<!-- No menu is assigned to the header-right location. -->
+					<?php endif; ?>
+				</div>
+
+				<!-- Mobile header -->
+				<div class="header-mobile">
+					<button
+						class="navbar-toggler"
+						type="button"
+						data-bs-toggle="collapse"
+						data-bs-target="#navbar"
+						aria-controls="navbar"
+						aria-expanded="false"
+						aria-label="<?php esc_attr_e( 'Toggle navigation', 'the-blue-print' ); ?>"
+					>
 						<span class="navbar-toggler-line"></span>
 						<span class="navbar-toggler-line"></span>
 						<span class="navbar-toggler-line"></span>
 					</button>
+
+					<a
+						class="navbar-brand header-logo header-logo--mobile"
+						href="<?php echo esc_url( home_url( '/' ) ); ?>"
+						aria-label="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>"
+						rel="home"
+					>
+						<?php if ( ! empty( $header_logo ) ) : ?>
+							<img
+								src="<?php echo esc_url( $header_logo ); ?>"
+								alt="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>"
+							/>
+						<?php else : ?>
+							<?php echo esc_html( get_bloginfo( 'name', 'display' ) ); ?>
+						<?php endif; ?>
+					</a>
+
+					<button
+						class="header-utility header-cart header-cart--mobile"
+						type="button"
+						data-shopwp-cart-trigger
+					>
+						<?php esc_html_e( 'Cart', 'the-blue-print' ); ?>
+					</button>
 				</div>
 
 				<?php if ( '1' === $search_enabled ) : ?>
-					<div id="searchCollapse" class="collapse">
-						<form class="search-form" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-							<div class="input-group">
-								<input type="text" name="s" class="form-control" placeholder="<?php esc_attr_e( 'Search', 'the-blue-print' ); ?>" title="<?php esc_attr_e( 'Search', 'the-blue-print' ); ?>" />
-								<!-- <button type="submit" name="submit" class="btn btn-outline-secondary"><?php esc_html_e( 'Search', 'the-blue-print' ); ?></button> -->
-							</div>
+					<div id="searchCollapse" class="collapse header-search">
+						<form
+							class="search-form"
+							role="search"
+							method="get"
+							action="<?php echo esc_url( home_url( '/' ) ); ?>"
+						>
+							<label class="visually-hidden" for="headerSearchInput">
+								<?php esc_html_e( 'Search', 'the-blue-print' ); ?>
+							</label>
+
+							<input
+								id="headerSearchInput"
+								type="search"
+								name="s"
+								class="form-control"
+								placeholder="<?php esc_attr_e( 'Search', 'the-blue-print' ); ?>"
+							/>
 						</form>
 					</div>
 				<?php endif; ?>
 
+				<!-- Existing mobile drawer -->
 				<div id="navbar" class="collapse navbar-collapse">
-					<h3>Menu</h3>
+					<div class="mobile-menu-header">
+						<h3><?php esc_html_e( 'Menu', 'the-blue-print' ); ?></h3>
+					</div>
+
 					<?php
-						// Loading WordPress Custom Menu (theme_location).
 						wp_nav_menu(
 							array(
-								'menu_class'     => 'navbar-nav me-auto',
-								'container'      => '',
+								'menu_class'     => 'navbar-nav',
+								'container'      => false,
 								'fallback_cb'    => 'WP_Bootstrap_Navwalker::fallback',
 								'walker'         => new WP_Bootstrap_Navwalker(),
 								'theme_location' => 'main-menu',
 							)
 						);
 					?>
-				</div><!-- /.navbar-collapse -->
+				</div>
 			</div><!-- /.container -->
 		</nav><!-- /#header -->
 	</header>

@@ -585,3 +585,18 @@ function mytheme_enqueue_assets() {
     );
 }
 add_action('wp_enqueue_scripts', 'mytheme_enqueue_assets');
+
+
+// Split Header Menu into two parts: Left and Right
+
+function blueprint_register_menus() {
+	register_nav_menus(
+		array(
+			'main-menu'  => esc_html__( 'Mobile Menu', 'the-blue-print' ),
+			'header-left' => esc_html__( 'Header Left', 'the-blue-print' ),
+			'header-right' => esc_html__( 'Header Right', 'the-blue-print' ),
+		)
+	);
+}
+
+add_action( 'after_setup_theme', 'blueprint_register_menus' );
