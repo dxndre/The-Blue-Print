@@ -17,7 +17,41 @@
 
 <?php wp_body_open(); ?>
 
-<a href="#main" class="visually-hidden-focusable"><?php esc_html_e( 'Skip to main content', 'the-blue-print' ); ?></a>
+<?php if ( is_front_page() ) : ?>
+	<?php
+		$splash_logo = get_theme_mod( 'header_logo' );
+	?>
+
+	<div
+		class="site-splash"
+		data-site-splash
+		aria-hidden="true"
+	>
+		<div class="site-splash__inner">
+			<?php if ( ! empty( $splash_logo ) ) : ?>
+				<img
+					class="site-splash__logo"
+					src="<?php echo esc_url( $splash_logo ); ?>"
+					alt=""
+					width="180"
+					height="100"
+				/>
+			<?php else : ?>
+				<span class="site-splash__name">
+					<?php echo esc_html( get_bloginfo( 'name', 'display' ) ); ?>
+				</span>
+			<?php endif; ?>
+		</div>
+	</div>
+
+	<noscript>
+		<style>
+			.site-splash {
+				display: none !important;
+			}
+		</style>
+	</noscript>
+<?php endif; ?>
 
 <div id="wrapper">
 	<header>

@@ -47,6 +47,98 @@ import * as bootstrap from 'bootstrap';
 			}
 		}
 	})();
+
+
+	/**
+	 * Homepage splash screen
+	 */
+	function initHomepageSplash() {
+		const splash = document.querySelector('[data-site-splash]');
+
+		if (!splash) {
+			return;
+		}
+
+		const body = document.body;
+		const minimumDuration = 1300;
+		const failsafeDuration = 4000;
+		const startedAt = performance.now();
+
+		let dismissed = false;
+		let removalTimer;
+
+		const removeSplash = () => {
+			if (splash.isConnected) {
+				splash.remove();
+			}
+		};
+
+		const dismissSplash = () => {
+			if (dismissed) {
+				return;
+			}
+
+			dismissed = true;
+
+			splash.classList.add('is-leaving');
+			body.classList.remove('home-splash-active');
+
+			/*
+			* Fallback removal in case transitionend does not fire.
+			*/
+			removalTimer = window.setTimeout(removeSplash, 800);
+		};
+
+		const dismissAfterMinimumDuration = () => {
+			const elapsed = performance.now() - startedAt;
+			const remaining = Math.max(0, minimumDuration - elapsed);
+
+			window.setTimeout(dismissSplash, remaining);
+		};
+
+		body.classList.add('home-splash-active');
+
+		splash.addEventListener('transitionend', (event) => {
+			if (
+				event.target === splash &&
+				event.propertyName === 'opacity' &&
+				splash.classList.contains('is-leaving')
+			) {
+				window.clearTimeout(removalTimer);
+				removeSplash();
+			}
+		});
+
+		if (document.readyState === 'complete') {
+			dismissAfterMinimumDuration();
+		} else {
+			window.addEventListener(
+				'load',
+				dismissAfterMinimumDuration,
+				{ once: true }
+			);
+		}
+
+		/*
+		* Prevent the splash from getting stuck if the load event
+		* is delayed by a failed image or third-party resource.
+		*/
+		window.setTimeout(dismissSplash, failsafeDuration);
+	}
+
+	/*
+	* This works whether main.js is loaded in the document head
+	* or at the end of the body.
+	*/
+	if (document.readyState === 'loading') {
+		document.addEventListener(
+			'DOMContentLoaded',
+			initHomepageSplash,
+			{ once: true }
+		);
+	} else {
+		initHomepageSplash();
+	}
 })();
 
 
