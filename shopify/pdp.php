@@ -65,20 +65,12 @@ $presentation_id = ! empty( $presentation_posts )
 /*
  * ACF presentation values.
  */
-$editorial_images   = array();
+
 $product_information = '';
 $shipping_returns    = '';
 $size_guide          = array();
 
 if ( $presentation_id && function_exists( 'get_field' ) ) {
-	$editorial_images = array_filter(
-		array(
-			get_field( 'editorial_image_1', $presentation_id ),
-			get_field( 'editorial_image_2', $presentation_id ),
-			get_field( 'editorial_image_3', $presentation_id ),
-			get_field( 'editorial_image_4', $presentation_id ),
-		)
-	);
 
 	$product_information = get_field(
 		'product_information_override',
@@ -95,28 +87,6 @@ if ( $presentation_id && function_exists( 'get_field' ) ) {
 		$presentation_id
 	);
 }
-
-/*
- * Normalise ACF Image fields.
- *
- * This supports Image ID and Image Array return formats.
- */
-$normalise_image_id = static function ( $image ) {
-	if ( is_array( $image ) && ! empty( $image['ID'] ) ) {
-		return (int) $image['ID'];
-	}
-
-	return absint( $image );
-};
-
-$editorial_images = array_values(
-	array_filter(
-		array_map(
-			$normalise_image_id,
-			$editorial_images
-		)
-	)
-);
 
 /*
  * Normalise the ACF Link field.
@@ -258,53 +228,15 @@ $has_supporting_information = (
 					</div>
 
 					<div class="blueprint-pdp__media">
-                        <div
-                            class="blueprint-pdp__image-slider"
-                            data-product-image-slider
-                        >
-                            <shopify-list-context
-                                type="image"
-                                query="product.selectedOrFirstAvailableVariant.product.images"
-                                first="20"
-                            >
-                                <template>
-                                    <figure class="blueprint-pdp__image-slide">
-                                        <shopify-media
-                                            class="blueprint-pdp__shopify-media"
-                                            layout="fullWidth"
-                                            aspect-ratio="1"
-                                            query="image"
-                                            sizes="(min-width: 992px) 50vw, 100vw"
-                                        ></shopify-media>
-                                    </figure>
-                                </template>
-                            </shopify-list-context>
-                        </div>
-
-                        <div class="blueprint-pdp__image-controls">
-                            <button
-                                class="blueprint-pdp__image-control blueprint-pdp__image-control--previous"
-                                type="button"
-                                data-product-image-previous
-                                aria-label="<?php esc_attr_e( 'Previous product image', 'the-blue-print' ); ?>"
-                            >
-                                <span aria-hidden="true">&larr;</span>
-                            </button>
-
-                            <p class="blueprint-pdp__image-status" aria-live="polite">
-                                <span data-product-image-current>1</span>
-                                <span aria-hidden="true"> / </span>
-                                <span data-product-image-total>1</span>
-                            </p>
-
-                            <button
-                                class="blueprint-pdp__image-control blueprint-pdp__image-control--next"
-                                type="button"
-                                data-product-image-next
-                                aria-label="<?php esc_attr_e( 'Next product image', 'the-blue-print' ); ?>"
-                            >
-                                <span aria-hidden="true">&rarr;</span>
-                            </button>
+                        <div class="blueprint-pdp__primary-image">
+                            <shopify-media
+                                class="blueprint-pdp__shopify-media"
+                                layout="fullWidth"
+                                aspect-ratio="1"
+                                query="product.featuredImage"
+                                sizes="(min-width: 992px) 50vw, 100vw"
+                                priority
+                            ></shopify-media>
                         </div>
                     </div>
 				</div>
@@ -312,29 +244,35 @@ $has_supporting_information = (
 		</shopify-context>
 	</section>
 
-	<?php if ( ! empty( $editorial_images ) ) : ?>
-		<section
-			class="product-gallery"
-			aria-label="<?php esc_attr_e( 'Product editorial gallery', 'the-blue-print' ); ?>"
-		>
-			<?php foreach ( $editorial_images as $index => $image_id ) : ?>
-				<figure class="product-gallery__item">
-					<?php
-					echo wp_get_attachment_image(
-						$image_id,
-						'full',
-						false,
-						array(
-							'class'   => 'product-gallery__image',
-							'loading' => 0 === $index ? 'eager' : 'lazy',
-							'sizes'   => '(min-width: 768px) 50vw, 100vw',
-						)
-					);
-					?>
-				</figure>
-			<?php endforeach; ?>
-		</section>
-	<?php endif; ?>
+	<section
+        class="product-gallery product-gallery--shopify"
+        aria-label="<?php esc_attr_e( 'Product gallery', 'the-blue-print' ); ?>"
+    >
+        <shopify-context
+            type="product"
+            handle="<?php echo esc_attr( $product_handle ); ?>"
+        >
+            <template>
+                <shopify-list-context
+                    type="image"
+                    query="product.selectedOrFirstAvailableVariant.product.images"
+                    first="20"
+                >
+                    <template>
+                        <figure class="product-gallery__item">
+                            <shopify-media
+                                class="product-gallery__shopify-image"
+                                layout="fullWidth"
+                                aspect-ratio="0.75"
+                                query="image"
+                                sizes="(min-width: 768px) 50vw, 100vw"
+                            ></shopify-media>
+                        </figure>
+                    </template>
+                </shopify-list-context>
+            </template>
+        </shopify-context>
+    </section>
 
 	<?php if ( ! empty( $product_information ) ) : ?>
 		<dialog
