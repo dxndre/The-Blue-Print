@@ -1399,3 +1399,832 @@ body.home-splash-active {
 		margin-top: 60px;
 	}
 }
+
+
+/* ============================================================
+ * Shopify Product Detail Page
+ * ============================================================ */
+
+.blueprint-pdp {
+	--pdp-colour-background: #fff;
+	--pdp-colour-foreground: #050505;
+	--pdp-colour-muted: #666;
+	--pdp-colour-border: #d8d8d8;
+	--pdp-colour-image-background: #f1f1f1;
+	--pdp-colour-button: #050505;
+	--pdp-colour-button-text: #fff;
+	--pdp-page-gutter: 1.25rem;
+	--pdp-section-spacing: 4rem;
+	--pdp-header-offset: 5rem;
+	--pdp-content-width: 100rem;
+
+	position: relative;
+	width: 100%;
+	max-width: none;
+	margin: 0;
+	background: var(--pdp-colour-background);
+	color: var(--pdp-colour-foreground);
+}
+
+
+/* ============================================================
+ * Shopify component wrappers
+ * ============================================================ */
+
+.blueprint-pdp shopify-context {
+	display: block;
+	width: 100%;
+}
+
+.blueprint-pdp shopify-list-context {
+	display: contents;
+}
+
+
+/* ============================================================
+ * Product hero
+ * ============================================================ */
+
+.blueprint-pdp__hero {
+	display: flex;
+	width: 100%;
+	min-height: calc(100svh - var(--pdp-header-offset));
+	padding:
+		calc(var(--pdp-header-offset) + 2rem)
+		var(--pdp-page-gutter)
+		var(--pdp-section-spacing);
+	background: var(--pdp-colour-background);
+
+	margin-top: 0;
+}
+
+.blueprint-pdp__layout {
+	display: grid;
+	width: 100%;
+	max-width: var(--pdp-content-width);
+	margin: 0 auto;
+	grid-template-areas:
+		'summary'
+		'media';
+	grid-template-columns: minmax(0, 1fr);
+	gap: 2.5rem;
+}
+
+.blueprint-pdp__summary {
+	display: flex;
+	min-width: 0;
+	grid-area: summary;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.blueprint-pdp__media {
+	position: relative;
+	min-width: 0;
+	grid-area: media;
+	align-self: center;
+}
+
+
+/* ============================================================
+ * Product heading
+ * ============================================================ */
+
+.blueprint-pdp__heading {
+	margin-bottom: 2rem;
+}
+
+.blueprint-pdp__title {
+	max-width: 38rem;
+	margin: 0;
+	font-size: clamp(1.75rem, 7vw, 2.75rem);
+	font-weight: 700;
+	line-height: 0.98;
+	letter-spacing: -0.04em;
+	text-transform: uppercase;
+}
+
+.blueprint-pdp__title shopify-data {
+	display: block;
+}
+
+.blueprint-pdp__price {
+	display: flex;
+	align-items: baseline;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin-top: 0.65rem;
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 1.3;
+	letter-spacing: 0;
+	text-transform: uppercase;
+}
+
+.blueprint-pdp__price shopify-money {
+	display: inline-block;
+}
+
+.blueprint-pdp__price shopify-money:first-child::before {
+	content: 'Black // ';
+}
+
+.blueprint-pdp__compare-price {
+	color: var(--pdp-colour-muted);
+	text-decoration: line-through;
+}
+
+
+/* ============================================================
+ * Product description
+ * ============================================================ */
+
+.blueprint-pdp__description {
+	max-width: 35rem;
+	margin-bottom: 1.5rem;
+	color: var(--pdp-colour-foreground);
+	font-size: 0.6875rem;
+	font-weight: 400;
+	line-height: 1.55;
+	letter-spacing: 0.005em;
+	text-transform: uppercase;
+}
+
+.blueprint-pdp__description shopify-data {
+	display: block;
+}
+
+.blueprint-pdp__description p {
+	margin: 0 0 0.85rem;
+}
+
+.blueprint-pdp__description p:last-child {
+	margin-bottom: 0;
+}
+
+.blueprint-pdp__description ul,
+.blueprint-pdp__description ol {
+	margin: 0.85rem 0;
+	padding-left: 1.25rem;
+}
+
+
+/* ============================================================
+ * Purchase section
+ * ============================================================ */
+
+.blueprint-pdp__purchase {
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+	width: 100%;
+	max-width: 35rem;
+}
+
+.blueprint-pdp__variants {
+	width: 100%;
+	transition: 0.3s all ease;
+}
+
+.blueprint-pdp__variants shopify-variant-selector {
+	display: block;
+	width: 100%;
+}
+
+
+/*
+ * Shopify exposes selected variant-selector elements through
+ * CSS parts. Unsupported parts are simply ignored by browsers.
+ */
+
+.blueprint-pdp__variants shopify-variant-selector::part(form) {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.blueprint-pdp__variants shopify-variant-selector::part(label) {
+	margin: 0;
+	font-family: inherit;
+	font-size: 0.6875rem;
+	font-weight: 400;
+	line-height: 1.2;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.blueprint-pdp__variants shopify-variant-selector::part(radio-group) {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.35rem;
+}
+
+.blueprint-pdp__variants shopify-variant-selector::part(radio) {
+	min-width: 2.25rem;
+	min-height: 2.25rem;
+	padding: 0.5rem;
+	border: 1px solid transparent;
+	border-radius: 0;
+	background: transparent;
+	color: var(--pdp-colour-foreground);
+	font-family: inherit;
+	font-size: 0.6875rem;
+	text-align: center;
+}
+
+.blueprint-pdp__variants shopify-variant-selector::part(radio-selected) {
+	border-color: var(--pdp-colour-foreground);
+	background: var(--pdp-colour-foreground);
+	color: var(--pdp-colour-button-text);
+}
+
+.blueprint-pdp__variants shopify-variant-selector::part(select) {
+	width: 100%;
+	min-height: 2.75rem;
+	padding: 0 2.5rem 0 0.75rem;
+	border: 1px solid var(--pdp-colour-border);
+	border-radius: 0;
+	background-color: var(--pdp-colour-background);
+	color: var(--pdp-colour-foreground);
+	font-family: inherit;
+	font-size: 0.75rem;
+	text-transform: uppercase;
+}
+
+.blueprint-pdp__add-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.65rem;
+	width: 100%;
+	min-height: 3.25rem;
+	padding: 0.9rem 1.25rem;
+	border: 1px solid var(--pdp-colour-button);
+	border-radius: 0;
+	background: var(--pdp-colour-button);
+	color: var(--pdp-colour-button-text);
+	font-family: inherit;
+	font-size: 0.6875rem;
+	font-weight: 400;
+	line-height: 1;
+	letter-spacing: 0.025em;
+	text-align: center;
+	text-decoration: none;
+	text-transform: uppercase;
+	transition:
+		background-color 180ms ease,
+		color 180ms ease,
+		opacity 180ms ease;
+	appearance: none;
+
+	&:hover:not(:disabled) {
+		background: transparent;
+		color: var(--pdp-colour-foreground);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--pdp-colour-foreground);
+		outline-offset: 3px;
+	}
+
+	&:disabled {
+		cursor: not-allowed;
+		opacity: 0.4;
+	}
+
+	i {
+		font-size: 0.75rem;
+	}
+}
+
+
+/* ============================================================
+ * Product information links
+ * ============================================================ */
+
+.blueprint-pdp__information-links {
+	display: grid;
+	width: 100%;
+	max-width: 35rem;
+	margin-top: 1rem;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	column-gap: 1.25rem;
+	row-gap: 0;
+}
+
+.blueprint-pdp__information-link {
+	display: inline-flex;
+	align-items: center;
+	min-height: 2.75rem;
+	padding: 0;
+	border: 0;
+	border-bottom: 1px solid transparent;
+	border-radius: 0;
+	background: transparent;
+	color: var(--pdp-colour-foreground);
+	font-family: inherit;
+	font-size: 0.625rem;
+	font-weight: 400;
+	line-height: 1.25;
+	letter-spacing: 0.08em;
+	text-align: left;
+	text-decoration: underline;
+	text-decoration-thickness: 0.0625rem;
+	text-underline-offset: 0.25rem;
+	text-transform: uppercase;
+	cursor: pointer;
+	appearance: none;
+
+	&:hover {
+		text-decoration: none;
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--pdp-colour-foreground);
+		outline-offset: 3px;
+	}
+}
+
+
+/* ============================================================
+ * Shopify product-image carousel
+ * ============================================================ */
+
+.blueprint-pdp__image-slider {
+	display: grid;
+	width: 100%;
+	max-width: 46rem;
+	margin: 0 auto;
+	grid-auto-columns: 100%;
+	grid-auto-flow: column;
+	overflow-x: auto;
+	overflow-y: hidden;
+	background: var(--pdp-colour-image-background);
+	overscroll-behavior-inline: contain;
+	scroll-behavior: smooth;
+	scroll-snap-type: inline mandatory;
+	scrollbar-width: none;
+	-webkit-overflow-scrolling: touch;
+
+	&::-webkit-scrollbar {
+		display: none;
+	}
+}
+
+.blueprint-pdp__image-slide {
+	position: relative;
+	width: 100%;
+	min-width: 0;
+	margin: 0;
+	overflow: hidden;
+	background: var(--pdp-colour-image-background);
+	scroll-snap-align: start;
+	scroll-snap-stop: always;
+}
+
+.blueprint-pdp__shopify-media {
+	display: block;
+	width: 100%;
+	aspect-ratio: 1 / 1;
+	background: var(--pdp-colour-image-background);
+}
+
+.blueprint-pdp__shopify-media img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center;
+}
+
+.blueprint-pdp__image-controls {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	max-width: 46rem;
+	margin: 0.75rem auto 0;
+}
+
+.blueprint-pdp__image-control {
+	display: inline-grid;
+	width: 2.5rem;
+	height: 2.5rem;
+	padding: 0;
+	border: 1px solid var(--pdp-colour-foreground);
+	border-radius: 0;
+	background: var(--pdp-colour-background);
+	color: var(--pdp-colour-foreground);
+	font-family: inherit;
+	font-size: 0.875rem;
+	line-height: 1;
+	cursor: pointer;
+	place-items: center;
+	transition:
+		background-color 180ms ease,
+		color 180ms ease,
+		opacity 180ms ease;
+	appearance: none;
+
+	&:hover:not(:disabled) {
+		background: var(--pdp-colour-foreground);
+		color: var(--pdp-colour-background);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--pdp-colour-foreground);
+		outline-offset: 3px;
+	}
+
+	&:disabled {
+		cursor: not-allowed;
+		opacity: 0.25;
+	}
+}
+
+.blueprint-pdp__image-status {
+	margin: 0;
+	font-size: 0.625rem;
+	line-height: 1;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+
+/* ============================================================
+ * Editorial gallery
+ * ============================================================ */
+
+.product-gallery {
+	display: grid;
+	width: 100%;
+	grid-template-columns: minmax(0, 1fr);
+	background: var(--pdp-colour-image-background);
+}
+
+.product-gallery__item {
+	position: relative;
+	min-width: 0;
+	margin: 0;
+	overflow: hidden;
+	background: var(--pdp-colour-image-background);
+}
+
+.product-gallery__image {
+	display: block;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 4 / 5;
+	object-fit: cover;
+	object-position: center;
+}
+
+
+/* ============================================================
+ * Product dialogs
+ * ============================================================ */
+
+.product-dialog {
+	width: min(calc(100% - 2rem), 37.5rem);
+	max-width: 37.5rem;
+	max-height: calc(100dvh - 2rem);
+	margin: auto;
+	padding: 0;
+	overflow: visible;
+	border: 0;
+	border-radius: 0;
+	background: var(--pdp-colour-background);
+	color: var(--pdp-colour-foreground);
+
+	&::backdrop {
+		background: rgb(0 0 0 / 65%);
+		backdrop-filter: blur(0.125rem);
+	}
+}
+
+.product-dialog__inner {
+	max-height: calc(100dvh - 2rem);
+	padding: 1.5rem;
+	overflow-y: auto;
+}
+
+.product-dialog__header {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 1.5rem;
+	padding-bottom: 1.25rem;
+	border-bottom: 1px solid var(--pdp-colour-border);
+}
+
+.product-dialog__title {
+	margin: 0;
+	font-size: 1rem;
+	font-weight: 700;
+	line-height: 1.1;
+	letter-spacing: 0.025em;
+	text-transform: uppercase;
+}
+
+.product-dialog__close {
+	display: grid;
+	flex: 0 0 auto;
+	width: 2rem;
+	height: 2rem;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	color: var(--pdp-colour-foreground);
+	font-size: 1.5rem;
+	line-height: 1;
+	cursor: pointer;
+	place-items: center;
+	appearance: none;
+
+	&:focus-visible {
+		outline: 2px solid var(--pdp-colour-foreground);
+		outline-offset: 2px;
+	}
+}
+
+.product-dialog__content {
+	padding-top: 1.5rem;
+	font-size: 0.75rem;
+	line-height: 1.65;
+}
+
+.product-dialog__content > *:first-child {
+	margin-top: 0;
+}
+
+.product-dialog__content > *:last-child {
+	margin-bottom: 0;
+}
+
+
+/* ============================================================
+ * Loading and unavailable states
+ * ============================================================ */
+
+.blueprint-pdp__layout:has(shopify-context:not(:defined)) {
+	opacity: 0;
+}
+
+.blueprint-pdp shopify-context:defined {
+	animation: blueprint-product-reveal 350ms ease both;
+}
+
+@keyframes blueprint-product-reveal {
+	from {
+		opacity: 0;
+		transform: translateY(0.5rem);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+
+/* ============================================================
+ * Small devices
+ * Bootstrap sm: 576px and above
+ * ============================================================ */
+
+@include media-breakpoint-up(sm) {
+	.blueprint-pdp {
+		--pdp-page-gutter: 2rem;
+	}
+
+	.blueprint-pdp__hero {
+		padding-bottom: 5rem;
+	}
+
+	.blueprint-pdp__title {
+		font-size: clamp(2rem, 6vw, 3rem);
+	}
+
+	.blueprint-pdp__information-links {
+		column-gap: 2rem;
+	}
+
+	.product-dialog__inner {
+		padding: 2rem;
+	}
+}
+
+
+/* ============================================================
+ * Medium devices
+ * Bootstrap md: 768px and above
+ * ============================================================ */
+
+@include media-breakpoint-up(md) {
+	.blueprint-pdp {
+		--pdp-page-gutter: 2.5rem;
+		--pdp-section-spacing: 5rem;
+		--pdp-header-offset: 5.5rem;
+	}
+
+	.blueprint-pdp__layout {
+		gap: 3.5rem;
+	}
+
+	.blueprint-pdp__summary {
+		width: min(100%, 38rem);
+		margin-inline: auto;
+	}
+
+	.product-gallery {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.product-gallery__image {
+		height: 100%;
+		aspect-ratio: 3 / 4;
+	}
+
+	.product-dialog__inner {
+		padding: 2.5rem;
+	}
+}
+
+
+/* ============================================================
+ * Large devices
+ * Bootstrap lg: 992px and above
+ * ============================================================ */
+
+@include media-breakpoint-up(lg) {
+	.blueprint-pdp {
+		--pdp-page-gutter: clamp(2.5rem, 4vw, 5rem);
+		--pdp-section-spacing: clamp(4rem, 7vw, 7rem);
+		--pdp-header-offset: 6rem;
+	}
+
+	.blueprint-pdp__hero {
+		min-height: 100svh;
+		padding-top: calc(var(--pdp-header-offset) + 2.5rem);
+	}
+
+	.blueprint-pdp__layout {
+		grid-template-areas: 'summary media';
+		grid-template-columns:
+			minmax(20rem, 0.85fr)
+			minmax(28rem, 1.15fr);
+		align-items: center;
+		gap: clamp(4rem, 8vw, 9rem);
+	}
+
+	.blueprint-pdp__summary {
+		width: 100%;
+		max-width: 35rem;
+		margin: 0;
+		padding-left: clamp(0rem, 1.5vw, 2rem);
+	}
+
+	.blueprint-pdp__heading {
+		margin-bottom: clamp(2rem, 4vw, 3.5rem);
+	}
+
+	.blueprint-pdp__title {
+		font-size: clamp(2rem, 2.65vw, 3.25rem);
+	}
+
+	.blueprint-pdp__description {
+		margin-bottom: 1.75rem;
+		font-size: clamp(0.625rem, 0.68vw, 0.75rem);
+	}
+
+	.blueprint-pdp__media {
+		width: 100%;
+	}
+
+	.blueprint-pdp__image-slider {
+		max-width: none;
+	}
+
+	.blueprint-pdp__image-controls {
+		max-width: none;
+	}
+
+	.product-gallery__image {
+		aspect-ratio: 0.78;
+	}
+}
+
+
+/* ============================================================
+ * Extra-large devices
+ * Bootstrap xl: 1200px and above
+ * ============================================================ */
+
+@include media-breakpoint-up(xl) {
+	.blueprint-pdp {
+		--pdp-page-gutter: clamp(3.5rem, 5vw, 6.5rem);
+		--pdp-header-offset: 6.5rem;
+	}
+
+	.blueprint-pdp__layout {
+		grid-template-columns:
+			minmax(24rem, 0.9fr)
+			minmax(34rem, 1.1fr);
+		gap: clamp(6rem, 10vw, 11rem);
+	}
+
+	.blueprint-pdp__summary {
+		max-width: 38rem;
+	}
+
+	.blueprint-pdp__title {
+		font-size: clamp(2.25rem, 2.5vw, 3.5rem);
+	}
+
+	.blueprint-pdp__description,
+	.blueprint-pdp__purchase,
+	.blueprint-pdp__information-links {
+		max-width: 38rem;
+	}
+}
+
+
+/* ============================================================
+ * Very large screens
+ * Bootstrap xxl: 1400px and above
+ * ============================================================ */
+
+@include media-breakpoint-up(xxl) {
+	.blueprint-pdp__layout {
+		grid-template-columns:
+			minmax(26rem, 0.85fr)
+			minmax(39rem, 1.15fr);
+	}
+
+	.blueprint-pdp__summary {
+		padding-left: clamp(1rem, 2vw, 3rem);
+	}
+
+	.blueprint-pdp__media {
+		max-width: 48rem;
+		justify-self: end;
+	}
+}
+
+
+/* ============================================================
+ * Short desktop screens
+ * Prevent the hero from becoming unnecessarily tall.
+ * ============================================================ */
+
+@media (min-width: 992px) and (max-height: 760px) {
+	.blueprint-pdp__hero {
+		min-height: auto;
+		padding-top: calc(var(--pdp-header-offset) + 2rem);
+		padding-bottom: 3rem;
+	}
+
+	.blueprint-pdp__image-slider {
+		max-width: min(39rem, calc(100vh - 10rem));
+	}
+
+	.blueprint-pdp__image-controls {
+		max-width: min(39rem, calc(100vh - 10rem));
+	}
+}
+
+
+/* ============================================================
+ * Reduced motion
+ * ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+	.blueprint-pdp *,
+	.blueprint-pdp *::before,
+	.blueprint-pdp *::after {
+		scroll-behavior: auto !important;
+		transition-duration: 0.01ms !important;
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+	}
+}
+
+.shopify-product-page {
+	#header {
+		background: transparent;
+
+		img {
+			filter: invert(1) !important;
+		}
+
+		nav {
+			li {
+				a {
+					color: black;
+				}
+			}
+		}
+	}
+}

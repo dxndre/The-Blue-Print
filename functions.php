@@ -600,3 +600,55 @@ function blueprint_register_menus() {
 }
 
 add_action( 'after_setup_theme', 'blueprint_register_menus' );
+
+/**
+ * Add appropriate body classes to Shopify product pages.
+ */
+
+add_filter(
+	'body_class',
+	function ( $classes ) {
+		if ( empty( $_SERVER['REQUEST_URI'] ) ) {
+			return $classes;
+		}
+
+		$request_path = wp_parse_url(
+			wp_unslash( $_SERVER['REQUEST_URI'] ),
+			PHP_URL_PATH
+		);
+
+		$is_shopify_product = (
+			is_string( $request_path ) &&
+			preg_match(
+				'#/products/[^/]+/?$#i',
+				$request_path
+			)
+		);
+
+		if ( ! $is_shopify_product ) {
+			return $classes;
+		}
+
+		/*
+		 * Remove classes that incorrectly describe the page
+		 * as the WordPress posts index.
+		 */
+		$classes = array_diff(
+			$classes,
+			array(
+				'blog',
+				'home',
+			)
+		);
+
+		/*
+		 * Add project-specific Shopify product classes.
+		 */
+		$classes[] = 'single-shopify-product';
+		$classes[] = 'shopify-product-page';
+
+		return array_values(
+			array_unique( $classes )
+		);
+	}
+);
