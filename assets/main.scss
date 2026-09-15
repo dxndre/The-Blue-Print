@@ -115,6 +115,12 @@ $link-decoration: none;
  * General
  */
 
+html,
+body {
+	max-width: 100%;
+	overflow-x: clip;
+}
+
 body {
 	font-family: 'Helvetica', sans-serif;
 	transition: 0.5s all ease;
@@ -122,6 +128,16 @@ body {
 	&.page-template-page-full {
 		#main {
 			max-width: 100%;
+		}
+	}
+
+	&.page-template-default {
+		#main {
+			margin-top: 75px;
+
+			@include media-breakpoint-up(lg) {
+				margin-top: 140px;
+			}
 		}
 	}
 
@@ -386,9 +402,8 @@ img {
 }
 
 /* ==========================================================================
-   Header
-   Mobile-first: mobile header is the default; desktop header begins at lg.
-   ========================================================================== */
+ * Header
+ * ========================================================================== */
 
 #header {
 	--header-colour: #000;
@@ -400,55 +415,68 @@ img {
 	z-index: 1000;
 	width: 100%;
 	min-height: var(--header-height);
+	margin: 0;
 	padding: 0;
+	border: 0;
 	color: var(--header-colour);
-	background-color: var(--header-background);
-	transition:
-		color 0.3s ease,
-		background-color 0.3s ease,
-		box-shadow 0.3s ease;
+	background: var(--header-background);
+	transition: color 300ms ease, background-color 300ms ease, box-shadow 300ms ease;
 
-	/*
-	 * Keep the homepage header out of the document flow in every
-	 * scroll state. Only its visual properties should change.
-	 */
-	&.home {
-		position: fixed;
-		inset: 0 0 auto;
-		background: transparent;
-		background: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 100%);
-
-		&.scrolled {
-			background: white;
-		}
+	@include media-breakpoint-up(md) {
+		--header-horizontal-padding: 32px;
 	}
 
-	/*
-	 * Initial transparent state.
-	 */
-	&.home:not(.scrolled) {
+	@include media-breakpoint-up(lg) {
+		--header-height: 118px;
+		--header-horizontal-padding: clamp(32px, 3.5vw, 72px);
+	}
+
+	&.fixed-top {
+		position: fixed;
+		inset: 0 0 auto;
+	}
+
+	&.fixed-bottom {
+		position: fixed;
+		inset: auto 0 0;
+	}
+
+	&.home {
 		--header-colour: #fff;
 		--header-background: transparent;
 
+		background: linear-gradient(180deg, rgb(0 0 0 / 50%) 0%, rgb(0 0 0 / 0%) 100%);
 		box-shadow: none;
+
+		&.scrolled {
+			--header-colour: #000;
+			--header-background: #fff;
+
+			background: var(--header-background);
+		}
 	}
 
-	/*
-	 * Scrolled state.
-	 * Do not change position, height, padding or logo dimensions here.
-	 */
 	&.scrolled {
 		--header-colour: #000;
-		--header-background: rgba(255, 255, 255, 1);
+		--header-background: #fff;
 
-		// box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-		// backdrop-filter: blur(20px);
-		// -webkit-backdrop-filter: blur(20px);
+		background: var(--header-background);
 	}
 
-	/* ----------------------------------------------------------------------
-	   Shared controls
-	   ---------------------------------------------------------------------- */
+	.container {
+		position: relative;
+		width: 100%;
+		max-width: none;
+		min-height: var(--header-height);
+		margin: 0;
+		padding-right: var(--header-horizontal-padding);
+		padding-left: var(--header-horizontal-padding);
+
+		@include media-breakpoint-up(lg) {
+			display: flex;
+			align-items: flex-start;
+		}
+	}
 
 	a,
 	button {
@@ -459,6 +487,10 @@ img {
 		font: inherit;
 	}
 
+	/* ======================================================================
+	 * Shared utilities
+	 * ====================================================================== */
+
 	.header-utility {
 		display: inline-flex;
 		align-items: center;
@@ -467,8 +499,8 @@ img {
 		padding: 0;
 		border: 0;
 		border-radius: 0;
-		color: inherit;
 		background: transparent;
+		color: inherit;
 		font-size: 11px;
 		font-weight: 700;
 		line-height: 1;
@@ -476,9 +508,39 @@ img {
 		text-decoration: none;
 		text-transform: uppercase;
 		cursor: pointer;
+		appearance: none;
+
+		@include media-breakpoint-up(md) {
+			font-size: 12px;
+		}
+
+		@include media-breakpoint-up(lg) {
+			position: relative;
+			font-size: 13px;
+
+			&::after {
+				position: absolute;
+				right: 0;
+				bottom: -7px;
+				left: 0;
+				height: 1px;
+				background: currentColor;
+				content: '';
+				transform: scaleX(0);
+				transform-origin: right;
+				transition: transform 220ms ease;
+			}
+
+			&:hover::after,
+			&:focus-visible::after {
+				transform: scaleX(1);
+				transform-origin: left;
+			}
+		}
 
 		&:hover,
 		&:focus-visible {
+			background: transparent;
 			color: inherit;
 		}
 
@@ -488,18 +550,22 @@ img {
 		}
 	}
 
-	/* ----------------------------------------------------------------------
-	   Logo
-	   ---------------------------------------------------------------------- */
+	/* ======================================================================
+	 * Logo
+	 * ====================================================================== */
 
 	.header-logo,
 	.navbar-brand {
 		display: block;
-		justify-self: center;
 		margin: 0;
 		padding: 0;
 		color: inherit;
 		text-decoration: none;
+
+		@include media-breakpoint-up(lg) {
+			align-self: flex-start;
+			justify-self: center;
+		}
 
 		img {
 			display: block;
@@ -507,9 +573,15 @@ img {
 			max-width: 100%;
 			height: auto;
 			filter: invert(1);
-			transition:
-				filter 0.3s ease,
-				width 0.3s ease;
+			transition: filter 300ms ease, width 300ms ease;
+
+			@include media-breakpoint-up(md) {
+				width: 120px;
+			}
+
+			@include media-breakpoint-up(lg) {
+				width: clamp(135px, 11vw, 180px);
+			}
 		}
 
 		&:focus-visible {
@@ -518,10 +590,6 @@ img {
 		}
 	}
 
-	/*
-	 * This assumes the uploaded logo is white.
-	 * On the transparent homepage header, no inversion is needed.
-	 */
 	&.home:not(.scrolled) {
 		.header-logo,
 		.navbar-brand {
@@ -531,24 +599,21 @@ img {
 		}
 	}
 
-	/* ----------------------------------------------------------------------
-	   Desktop navigation
-	   Hidden by default because this is mobile-first.
-	   ---------------------------------------------------------------------- */
-
-	.header-desktop {
-		display: none;
-	}
-
-	/* ----------------------------------------------------------------------
-	   Mobile header
-	   ---------------------------------------------------------------------- */
+	/* ======================================================================
+	 * Mobile header
+	 * ====================================================================== */
 
 	.header-mobile {
 		display: grid;
-		grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
 		align-items: center;
+		width: 100%;
 		min-height: var(--header-height);
+		grid-template-columns: minmax(40px, 1fr) auto minmax(40px, 1fr);
+		column-gap: 12px;
+
+		@include media-breakpoint-up(lg) {
+			display: none;
+		}
 	}
 
 	.header-logo--mobile {
@@ -559,39 +624,45 @@ img {
 	.header-cart--mobile {
 		grid-column: 3;
 		justify-self: end;
+		white-space: nowrap;
 	}
 
-	/* ----------------------------------------------------------------------
-	   Mobile hamburger
-	   ---------------------------------------------------------------------- */
+	/* ======================================================================
+	 * Mobile hamburger
+	 * ====================================================================== */
 
 	.navbar-toggler {
 		position: relative;
-		z-index: 1002;
-		grid-column: 1;
-		justify-self: start;
+		z-index: 1003;
 		display: flex;
-		flex-direction: column;
 		align-items: flex-start;
 		justify-content: center;
-		gap: 7px;
 		width: 32px;
 		height: 32px;
 		margin: 0;
 		padding: 4px 0;
 		border: 0;
 		border-radius: 0;
-		color: inherit;
 		background: transparent;
+		color: inherit;
 		box-shadow: none;
+		flex-direction: column;
+		grid-column: 1;
+		justify-self: start;
+		gap: 7px;
 		cursor: pointer;
+
+		@include media-breakpoint-up(lg) {
+			display: none;
+		}
 
 		&:hover,
 		&:focus,
 		&:focus-visible,
 		&:focus-within {
-			color: inherit;
+			border: 0;
 			background: transparent;
+			color: inherit;
 			outline: none;
 			box-shadow: none;
 		}
@@ -605,18 +676,12 @@ img {
 			display: block;
 			width: 26px;
 			height: 1px;
-			background-color: currentColor;
+			background: currentColor;
 			transform-origin: center;
-			transition:
-				opacity 0.25s ease,
-				transform 0.25s ease,
-				background-color 0.25s ease;
+			transition: opacity 250ms ease, transform 250ms ease, background-color 250ms ease;
 		}
 
 		&[aria-expanded='true'] {
-			/*
-			 * The open toggle sits above the white mobile drawer.
-			 */
 			color: #000;
 
 			.navbar-toggler-line {
@@ -635,9 +700,106 @@ img {
 		}
 	}
 
-	/* ----------------------------------------------------------------------
-	   Search panel
-	   ---------------------------------------------------------------------- */
+	/* ======================================================================
+	 * Desktop header
+	 * ====================================================================== */
+
+	.header-desktop {
+		display: none;
+		width: 100%;
+
+		@include media-breakpoint-up(lg) {
+			display: grid;
+			align-items: start;
+			width: 100%;
+			min-height: var(--header-height);
+			padding: 34px 0 20px;
+			grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+		}
+	}
+
+	.header-desktop__left {
+		@include media-breakpoint-up(lg) {
+			justify-self: start;
+		}
+	}
+
+	.header-desktop__right {
+		@include media-breakpoint-up(lg) {
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
+			justify-self: end;
+		}
+	}
+
+	.header-menu {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+
+		@include media-breakpoint-up(lg) {
+			display: flex;
+			align-items: center;
+			gap: clamp(36px, 4vw, 72px);
+		}
+
+		.menu-item {
+			margin: 0;
+			padding: 0;
+		}
+
+		a {
+			position: relative;
+			display: block;
+			margin: 0;
+			padding: 0;
+			color: inherit;
+			font-size: 13px;
+			font-weight: 400;
+			line-height: 1;
+			letter-spacing: 0.045em;
+			text-decoration: none;
+			text-transform: uppercase;
+
+			&::after {
+				position: absolute;
+				right: 0;
+				bottom: -7px;
+				left: 0;
+				height: 1px;
+				background: currentColor;
+				content: '';
+				transform: scaleX(0);
+				transform-origin: right;
+				transition: transform 220ms ease;
+			}
+
+			&:hover,
+			&:focus-visible {
+				color: inherit;
+			}
+
+			&:hover::after,
+			&:focus-visible::after {
+				transform: scaleX(1);
+				transform-origin: left;
+			}
+
+			&:focus-visible {
+				outline: none;
+			}
+		}
+
+		.current-menu-item > a::after,
+		.current-menu-ancestor > a::after {
+			transform: scaleX(1);
+		}
+	}
+
+	/* ======================================================================
+	 * Search panel
+	 * ====================================================================== */
 
 	.header-search,
 	#searchCollapse {
@@ -648,10 +810,10 @@ img {
 		left: 0;
 		padding: 24px var(--header-horizontal-padding);
 		color: #000;
-		background: rgba(255, 255, 255, 0.96);
+		background: rgb(255 255 255 / 96%);
+		box-shadow: 0 20px 35px rgb(0 0 0 / 8%);
 		backdrop-filter: blur(20px);
 		-webkit-backdrop-filter: blur(20px);
-		box-shadow: 0 20px 35px rgba(0, 0, 0, 0.08);
 
 		.search-form {
 			width: min(100%, 700px);
@@ -670,14 +832,15 @@ img {
 			border: 0;
 			border-bottom: 1px solid #000;
 			border-radius: 0;
-			color: #000;
 			background: transparent;
+			color: #000;
 			font-size: 18px;
 			line-height: 1.3;
+			outline: none;
 			box-shadow: none;
 
 			&::placeholder {
-				color: rgba(0, 0, 0, 0.55);
+				color: rgb(0 0 0 / 55%);
 			}
 
 			&:hover,
@@ -690,44 +853,50 @@ img {
 		}
 	}
 
-	/* ----------------------------------------------------------------------
-	   Mobile navigation drawer
-	   Uses your existing Bootstrap Collapse element.
-	   ---------------------------------------------------------------------- */
+	/* ======================================================================
+	 * Mobile drawer
+	 * ====================================================================== */
 
 	#navbar {
 		position: fixed;
-		z-index: 1001;
+		z-index: 1002;
 		top: 0;
-		right: -100%;
+		right: auto;
+		bottom: 0;
+		left: -100%;
 		display: flex;
-		flex-direction: column;
 		align-items: stretch;
 		justify-content: flex-start;
-		gap: 0;
 		width: min(88vw, 420px);
 		height: 100dvh;
 		min-height: 100vh;
+		margin: 0;
 		padding: 100px 32px 40px;
 		overflow-x: hidden;
 		overflow-y: auto;
 		visibility: hidden;
 		pointer-events: none;
+		background: rgb(255 255 255 / 98%);
 		color: #000;
-		background: rgba(255, 255, 255, 0.96);
+		box-shadow: 20px 0 60px rgb(0 0 0 / 16%);
+		flex-direction: column;
+		gap: 0;
 		backdrop-filter: blur(40px);
 		-webkit-backdrop-filter: blur(40px);
-		box-shadow: -20px 0 60px rgba(0, 0, 0, 0.16);
-		transition:
-			right 0.35s ease,
-			visibility 0.35s ease;
+		transition: left 350ms ease, visibility 350ms ease;
 
-		/*
-		 * Bootstrap adds .show when open and .collapsing while transitioning.
-		 */
+		@include media-breakpoint-up(md) {
+			padding-right: 40px;
+			padding-left: 40px;
+		}
+
+		@include media-breakpoint-up(lg) {
+			display: none !important;
+		}
+
 		&.show,
 		&.collapsing {
-			right: 0;
+			left: 0;
 			height: 100dvh !important;
 			visibility: visible;
 			pointer-events: auto;
@@ -735,9 +904,7 @@ img {
 
 		&.collapsing {
 			overflow-y: auto;
-			transition:
-				right 0.35s ease,
-				visibility 0.35s ease;
+			transition: left 350ms ease, visibility 350ms ease;
 		}
 
 		.mobile-menu-header {
@@ -760,17 +927,17 @@ img {
 
 		.navbar-nav {
 			display: flex;
-			flex-direction: column;
 			width: 100%;
 			margin: 0;
 			padding: 0;
 			list-style: none;
+			flex-direction: column;
 		}
 
 		.menu-item {
 			width: 100%;
 			margin: 0;
-			border-bottom: 1px solid rgba(0, 0, 0, 0.16);
+			border-bottom: 1px solid rgb(0 0 0 / 16%);
 
 			a {
 				display: flex;
@@ -786,9 +953,7 @@ img {
 				letter-spacing: -0.02em;
 				text-decoration: none;
 				text-transform: uppercase;
-				transition:
-					opacity 0.2s ease,
-					border-color 0.2s ease;
+				transition: opacity 200ms ease;
 
 				&:hover,
 				&:focus-visible {
@@ -807,231 +972,73 @@ img {
 				opacity: 0.55;
 			}
 		}
+
+		img {
+			filter: none;
+		}
 	}
 
-	/* ----------------------------------------------------------------------
-	   Prevent inappropriate image inversion inside the drawer.
-	   ---------------------------------------------------------------------- */
+	/* ======================================================================
+	 * Mobile drawer backdrop
+	 * ====================================================================== */
 
-	#navbar img {
-		filter: none;
+	&::after {
+		position: fixed;
+		z-index: 1001;
+		inset: 0;
+		visibility: hidden;
+		pointer-events: none;
+		background: rgb(0 0 0 / 45%);
+		opacity: 0;
+		content: '';
+		transition: opacity 350ms ease, visibility 350ms ease;
+
+		@include media-breakpoint-up(lg) {
+			display: none;
+		}
 	}
-}
 
-/* ==========================================================================
-   WordPress admin bar
-   ========================================================================== */
+	&:has(#navbar.show)::after,
+	&:has(#navbar.collapsing)::after {
+		visibility: visible;
+		pointer-events: auto;
+		opacity: 1;
+	}
 
-body.admin-bar {
-	#header.fixed-top {
+	/* ======================================================================
+	 * WordPress admin bar
+	 * ====================================================================== */
+
+	body.admin-bar &.fixed-top {
 		top: var(--wp-admin--admin-bar--height, 32px);
 	}
 
-	#header #navbar {
+	body.admin-bar & #navbar {
 		top: var(--wp-admin--admin-bar--height, 32px);
 		height: calc(100dvh - var(--wp-admin--admin-bar--height, 32px));
 		min-height: calc(100vh - var(--wp-admin--admin-bar--height, 32px));
 
 		&.show,
 		&.collapsing {
-			height: calc(
-				100dvh - var(--wp-admin--admin-bar--height, 32px)
-			) !important;
+			height: calc(100dvh - var(--wp-admin--admin-bar--height, 32px)) !important;
 		}
 	}
-}
 
-/* ==========================================================================
-   Tablet enhancements
-   ========================================================================== */
+	/* ======================================================================
+	 * Reduced motion
+	 * ====================================================================== */
 
-@include media-breakpoint-up(md) {
-	#header {
-		--header-horizontal-padding: 32px;
-
-		.header-logo,
-		.navbar-brand {
-			img {
-				width: 120px;
-			}
-		}
-
-		.header-utility {
-			font-size: 12px;
-		}
-
-		#navbar {
-			padding-inline: 40px;
+	@media (prefers-reduced-motion: reduce) {
+		&,
+		*,
+		*::before,
+		*::after {
+			scroll-behavior: auto !important;
+			transition-duration: 0.01ms !important;
+			animation-duration: 0.01ms !important;
+			animation-iteration-count: 1 !important;
 		}
 	}
-}
-
-/* ==========================================================================
-   Desktop header
-   Bootstrap lg begins at 992px.
-   ========================================================================== */
-
-@include media-breakpoint-up(lg) {
-	#header {
-		--header-height: 118px;
-		--header-horizontal-padding: clamp(32px, 3.5vw, 72px);
-
-		min-height: var(--header-height);
-
-		.header-mobile {
-			display: none;
-		}
-
-		.header-desktop {
-			width: 100%;
-			display: grid;
-			grid-template-columns:
-				minmax(0, 1fr)
-				auto
-				minmax(0, 1fr);
-			align-items: start;
-			min-height: var(--header-height);
-			padding-block: 34px 20px;
-		}
-
-		.header-desktop__left {
-			justify-self: start;
-		}
-
-		.header-desktop__right {
-			display: flex;
-			align-items: center;
-			justify-self: end;
-			gap: clamp(36px, 4vw, 72px);
-		}
-
-		.header-menu {
-			display: flex;
-			align-items: center;
-			gap: clamp(36px, 4vw, 72px);
-			margin: 0;
-			padding: 0;
-			list-style: none;
-
-			.menu-item {
-				margin: 0;
-				padding: 0;
-			}
-
-			a {
-				position: relative;
-				display: block;
-				padding: 0;
-				color: inherit;
-				font-size: 13px;
-				line-height: 1;
-				letter-spacing: 0.045em;
-				text-decoration: none;
-				text-transform: uppercase;
-
-				&::after {
-					position: absolute;
-					right: 0;
-					bottom: -7px;
-					left: 0;
-					height: 1px;
-					background: currentColor;
-					content: '';
-					transform: scaleX(0);
-					transform-origin: right;
-					transition: transform 0.22s ease;
-				}
-
-				&:hover,
-				&:focus-visible {
-					color: inherit;
-				}
-
-				&:hover::after,
-				&:focus-visible::after {
-					transform: scaleX(1);
-					transform-origin: left;
-				}
-
-				&:focus-visible {
-					outline: none;
-				}
-			}
-
-			.current-menu-item > a::after,
-			.current-menu-ancestor > a::after {
-				transform: scaleX(1);
-			}
-		}
-
-		.header-logo,
-		.navbar-brand {
-			align-self: start;
-
-			img {
-				width: clamp(135px, 11vw, 180px);
-			}
-		}
-
-		.header-utility {
-			position: relative;
-			font-size: 13px;
-
-			&::after {
-				position: absolute;
-				right: 0;
-				bottom: -7px;
-				left: 0;
-				height: 1px;
-				background: currentColor;
-				content: '';
-				transform: scaleX(0);
-				transform-origin: right;
-				transition: transform 0.22s ease;
-			}
-
-			&:hover::after,
-			&:focus-visible::after {
-				transform: scaleX(1);
-				transform-origin: left;
-			}
-		}
-
-		.header-search,
-		#searchCollapse {
-			padding-inline: var(--header-horizontal-padding);
-		}
-
-		/*
-		 * The Bootstrap mobile drawer should never appear at desktop size,
-		 * even if it was left open while resizing the browser.
-		 */
-		#navbar,
-		#navbar.show,
-		#navbar.collapsing {
-			display: none !important;
-		}
-	}
-}
-
-/* ==========================================================================
-   Reduced motion
-   ========================================================================== */
-
-@media (prefers-reduced-motion: reduce) {
-	#header,
-	#header *,
-	#header *::before,
-	#header *::after {
-		scroll-behavior: auto !important;
-		transition-duration: 0.01ms !important;
-		animation-duration: 0.01ms !important;
-		animation-iteration-count: 1 !important;
-	}
-}
-
-.navbar-static-top {
-	margin-bottom: $grid-gutter-width;
 }
 
 /* ==========================================================================
@@ -2221,7 +2228,8 @@ body.home-splash-active {
 	}
 }
 
-.shopify-product-page {
+.shopify-product-page,
+.shopify-cart-route {
 	#header {
 		background: transparent;
 
@@ -2240,368 +2248,416 @@ body.home-splash-active {
 }
 
 /* ============================================================
- * Homepage Shopify collection
+ * Shared Shopify collection
+ * Homepage and Shop page
  * ============================================================ */
 
-.homepage-shopify {
-	--homepage-product-background: #fff;
-	--homepage-product-foreground: #050505;
-	--homepage-product-muted: #606060;
-	--homepage-product-border: #d5d5d5;
-	--homepage-product-details-height: 4.75rem;
+.homepage-shopify,
+.shop-page-shopify {
+	--shopify-grid-background: #fff;
+	--shopify-grid-foreground: #050505;
+	--shopify-grid-muted: #606060;
+	--shopify-grid-border: #d5d5d5;
+	--shopify-grid-details-height: 76px;
 
 	position: relative;
-	left: 50%;
 	width: 100vw !important;
 	max-width: none !important;
-	margin-top: 0 !important;
-	margin-right: -50vw !important;
-	margin-bottom: 0 !important;
-	margin-left: -50vw !important;
+	margin: 0 calc(50% - 50vw) !important;
 	padding: 0 !important;
-	background: var(--homepage-product-background);
-	color: var(--homepage-product-foreground);
-	transform: translateX(0);
-}
+	background: var(--shopify-grid-background);
+	color: var(--shopify-grid-foreground);
 
-.homepage-shopify > .wp-block-group__inner-container {
-	width: 100% !important;
-	max-width: none !important;
-	margin: 0 !important;
-	padding: 0 !important;
-}
-
-.homepage-shopify .wp-block-shopify-collection-shopify-collection-block {
-	width: 100% !important;
-	max-width: none !important;
-	margin: 0 !important;
-	padding: 0 !important;
-}
-
-.homepage-shopify .collection-layout {
-	width: 100% !important;
-	max-width: none !important;
-	margin: 0 !important;
-	padding: 0 !important;
-}
-
-.homepage-shopify shopify-context {
-	width: 100%;
-	max-width: none;
-}
-
-.homepage-shopify shopify-context,
-.homepage-shopify shopify-list-context {
-	display: contents;
-}
-
-
-/* ============================================================
- * Product grid
- * Mobile-first: one column
- * ============================================================ */
-
-.homepage-shopify .collection-grid__grid {
-	display: grid !important;
-	width: 100% !important;
-	max-width: none !important;
-	margin: 0 !important;
-	padding: 0 !important;
-	grid-template-columns: minmax(0, 1fr) !important;
-	gap: 0 !important;
-}
-
-
-/* ============================================================
- * Product card reset
- * ============================================================ */
-
-.homepage-shopify .product-card {
-	position: relative;
-	display: flex !important;
-	min-width: 0;
-	width: 100% !important;
-	max-width: none !important;
-	height: auto !important;
-	margin: 0 !important;
-	padding: 0 !important;
-	overflow: hidden;
-	border: 0 !important;
-	border-radius: 0 !important;
-	background: var(--homepage-product-background) !important;
-	box-shadow: none !important;
-	flex-direction: column;
-}
-
-.homepage-shopify .product-card > .product__link {
-	display: block;
-	width: 100%;
-	color: inherit;
-	text-decoration: none;
-}
-
-.homepage-shopify .product__link {
-	border: 0;
-	border-radius: 0;
-	color: inherit;
-	text-decoration: none;
-}
-
-
-/* ============================================================
- * Product image
- * ============================================================ */
-
-.homepage-shopify .product-card__image-container {
-	position: relative;
-	width: 100%;
-	margin: 0 !important;
-	padding: 0 !important;
-	overflow: hidden;
-	aspect-ratio: 9 / 10;
-	border: 0 !important;
-	border-radius: 0 !important;
-	background: #ededed;
-}
-
-.homepage-shopify .product-card__image-container > .product__link {
-	display: block;
-	width: 100%;
-	height: 100%;
-}
-
-.homepage-shopify .product-card__image-container shopify-media {
-	display: block !important;
-	width: 100% !important;
-	height: 100% !important;
-	margin: 0 !important;
-	padding: 0 !important;
-	overflow: hidden;
-	border: 0 !important;
-	border-radius: 0 !important;
-	background: #ededed;
-}
-
-.homepage-shopify .product-card__image-container shopify-media::part(image) {
-	display: block;
-	width: 100% !important;
-	height: 100% !important;
-	border-radius: 0 !important;
-	object-fit: cover !important;
-	object-position: center !important;
-	transition: transform 500ms cubic-bezier(0.2, 0.65, 0.3, 1);
-}
-
-.homepage-shopify .product-card__image-container shopify-media img {
-	display: block !important;
-	width: 100% !important;
-	height: 100% !important;
-	max-width: none !important;
-	margin: 0 !important;
-	border-radius: 0 !important;
-	object-fit: cover !important;
-	object-position: center !important;
-	transition: transform 500ms cubic-bezier(0.2, 0.65, 0.3, 1);
-}
-
-.homepage-shopify .product-card:hover shopify-media::part(image),
-.homepage-shopify .product-card:hover shopify-media img {
-	transform: scale(1.015);
-}
-
-
-/* ============================================================
- * Quick-shop button
- *
- * Hidden initially to match the mockup. The complete product
- * card remains clickable.
- * ============================================================ */
-
-.homepage-shopify .product-card__hover-button {
-	display: none !important;
-}
-
-
-/* ============================================================
- * Product information strip
- * ============================================================ */
-
-.homepage-shopify .product-card__details {
-	display: flex !important;
-	align-items: flex-start !important;
-	justify-content: flex-start !important;
-	width: 100% !important;
-	min-height: var(--homepage-product-details-height);
-	margin: 0 !important;
-	padding: 0.8rem 1rem 1rem !important;
-	border: 0 !important;
-	border-radius: 0 !important;
-	background: var(--homepage-product-background) !important;
-	flex-direction: column !important;
-	gap: 0.2rem !important;
-}
-
-.homepage-shopify .product-card__info {
-	display: block;
-	width: 100%;
-	min-width: 0;
-	margin: 0;
-	padding: 0;
-}
-
-.homepage-shopify .product-card__title {
-	display: block;
-	width: 100%;
-	margin: 0 !important;
-	padding: 0 !important;
-	color: var(--homepage-product-foreground) !important;
-	font-family: inherit;
-	font-size: 0.6875rem !important;
-	font-weight: 700 !important;
-	line-height: 1.15 !important;
-	letter-spacing: 0 !important;
-	text-align: left !important;
-	text-transform: uppercase;
-}
-
-.homepage-shopify .product-card__title span,
-.homepage-shopify .product-card__title shopify-data {
-	display: block;
-	width: 100%;
-	color: inherit;
-	font: inherit;
-	line-height: inherit;
-}
-
-.homepage-shopify .product-card__price {
-	display: block;
-	width: 100%;
-	margin: 0 !important;
-	padding: 0 !important;
-	color: var(--homepage-product-muted) !important;
-	font-family: inherit;
-	font-size: 0.5625rem !important;
-	font-weight: 400 !important;
-	line-height: 1.25 !important;
-	letter-spacing: 0 !important;
-	text-align: left !important;
-	text-transform: uppercase;
-}
-
-.homepage-shopify .product-card__price shopify-money {
-	display: inline;
-	color: inherit;
-	font: inherit;
-	line-height: inherit;
-}
-
-
-/* ============================================================
- * Keyboard interaction
- * ============================================================ */
-
-.homepage-shopify .product__link:focus-visible {
-	position: relative;
-	z-index: 2;
-	outline: 2px solid var(--homepage-product-foreground);
-	outline-offset: -2px;
-}
-
-
-/* ============================================================
- * Pagination / load-more row
- * ============================================================ */
-
-.homepage-shopify .collection-pagination {
-	display: flex;
-	align-items: center;
-	width: 100%;
-	max-width: none;
-	margin: 0 !important;
-	padding: 0 1rem !important;
-	list-style: none;
-	gap: 0;
-}
-
-.homepage-shopify .collection-pagination::before,
-.homepage-shopify .collection-pagination::after {
-	height: 1px;
-	background: var(--homepage-product-border);
-	content: '';
-	flex: 1 1 auto;
-}
-
-.homepage-shopify .collection-pagination li {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
-.homepage-shopify .collection-pagination li:first-child {
-	display: none;
-}
-
-.homepage-shopify .pagination-button {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	min-width: 11rem;
-	min-height: 4.5rem;
-	margin: 0;
-	padding: 0.75rem 1.5rem;
-	border: 0;
-	border-radius: 0;
-	background: transparent;
-	color: var(--homepage-product-foreground);
-	font-family: inherit;
-	font-size: 0;
-	font-weight: 400;
-	line-height: 1;
-	letter-spacing: 0.1em;
-	text-align: center;
-	text-transform: uppercase;
-	box-shadow: none;
-	cursor: pointer;
-	appearance: none;
-
-	&::before {
-		font-size: 0.625rem;
-		content: 'Load more';
+	> .wp-block-group__inner-container {
+		width: 100% !important;
+		max-width: none !important;
+		margin: 0 !important;
+		padding: 0 !important;
 	}
 
-	&:hover {
+	.wp-block-shopify-collection-shopify-collection-block {
+		width: 100% !important;
+		max-width: none !important;
+		margin: 0 !important;
+		padding: 0 !important;
+	}
+
+	.collection-layout {
+		width: 100% !important;
+		max-width: none !important;
+		margin: 0 !important;
+		padding: 0 !important;
+	}
+
+	shopify-context,
+	shopify-list-context {
+		display: contents;
+	}
+
+	/* ========================================================
+	 * Product grid
+	 * ======================================================== */
+
+	.collection-grid__grid {
+		display: grid !important;
+		width: 100% !important;
+		max-width: none !important;
+		margin: 0 !important;
+		padding: 0 !important;
+		grid-template-columns: minmax(0, 1fr) !important;
+		gap: 0 !important;
+	}
+
+	/* ========================================================
+	 * Product card
+	 * ======================================================== */
+
+	.product-card {
+		position: relative;
+		display: flex !important;
+		width: 100% !important;
+		min-width: 0;
+		max-width: none !important;
+		height: auto !important;
+		margin: 0 !important;
+		padding: 0 !important;
+		overflow: hidden;
+		border: 0 !important;
+		border-radius: 0 !important;
+		background: var(--shopify-grid-background) !important;
+		box-shadow: none !important;
+		flex-direction: column;
+		animation: shopify-product-reveal 350ms ease both;
+
+		> .product__link {
+			display: block;
+			width: 100%;
+			color: inherit;
+			text-decoration: none;
+		}
+
+		&:hover {
+			shopify-media::part(image),
+			shopify-media img {
+				transform: scale(1.015);
+			}
+		}
+	}
+
+	.product__link {
+		display: block;
+		margin: 0;
+		padding: 0;
+		border: 0;
+		border-radius: 0;
+		color: inherit;
+		text-decoration: none;
+
+		&:focus-visible {
+			position: relative;
+			z-index: 2;
+			outline: 2px solid var(--shopify-grid-foreground);
+			outline-offset: -2px;
+		}
+	}
+
+	/* ========================================================
+	 * Product image
+	 * ======================================================== */
+
+	.product-card__image-container {
+		position: relative;
+		width: 100%;
+		margin: 0 !important;
+		padding: 0 !important;
+		overflow: hidden;
+		aspect-ratio: 9 / 10;
+		border: 0 !important;
+		border-radius: 0 !important;
+		background: #ededed;
+
+		> .product__link {
+			display: block;
+			width: 100%;
+			height: 100%;
+		}
+
+		shopify-media {
+			display: block !important;
+			width: 100% !important;
+			height: 100% !important;
+			margin: 0 !important;
+			padding: 0 !important;
+			overflow: hidden;
+			border: 0 !important;
+			border-radius: 0 !important;
+			background: #ededed;
+		}
+
+		shopify-media::part(image),
+		shopify-media img {
+			display: block !important;
+			width: 100% !important;
+			height: 100% !important;
+			max-width: none !important;
+			margin: 0 !important;
+			border-radius: 0 !important;
+			object-fit: cover !important;
+			object-position: center !important;
+			transition: transform 500ms cubic-bezier(0.2, 0.65, 0.3, 1);
+		}
+	}
+
+	/* ========================================================
+	 * Quick shop
+	 * ======================================================== */
+
+	.product-card__hover-button {
+		display: none !important;
+	}
+
+	/* ========================================================
+	 * Product information
+	 * ======================================================== */
+
+	.product-card__details {
+		display: flex !important;
+		align-items: flex-start !important;
+		justify-content: flex-start !important;
+		width: 100% !important;
+		min-height: var(--shopify-grid-details-height);
+		margin: 0 !important;
+		padding: 0.8em 1em 1em !important;
+		border: 0 !important;
+		border-radius: 0 !important;
+		background: var(--shopify-grid-background) !important;
+		flex-direction: column !important;
+		gap: 0.2em !important;
+	}
+
+	.product-card__info {
+		display: block;
+		width: 100%;
+		min-width: 0;
+		margin: 0;
+		padding: 0;
+	}
+
+	.product-card__title {
+		display: block;
+		width: 100%;
+		margin: 0 !important;
+		padding: 0 !important;
+		color: var(--shopify-grid-foreground) !important;
+		font-family: inherit;
+		font-size: 11px !important;
+		font-weight: 700 !important;
+		line-height: 1.15 !important;
+		letter-spacing: 0 !important;
+		text-align: left !important;
+		text-transform: uppercase;
+
+		span,
+		shopify-data {
+			display: block;
+			width: 100%;
+			color: inherit;
+			font: inherit;
+			line-height: inherit;
+		}
+	}
+
+	.product-card__price {
+		display: block;
+		width: 100%;
+		margin: 0 !important;
+		padding: 0 !important;
+		color: var(--shopify-grid-muted) !important;
+		font-family: inherit;
+		font-size: 9px !important;
+		font-weight: 400 !important;
+		line-height: 1.25 !important;
+		letter-spacing: 0 !important;
+		text-align: left !important;
+		text-transform: uppercase;
+
+		shopify-money {
+			display: inline;
+			color: inherit;
+			font: inherit;
+			line-height: inherit;
+		}
+	}
+
+	/* ========================================================
+	 * Pagination
+	 * ======================================================== */
+
+	.collection-pagination {
+		align-items: center;
+		width: 100%;
+		max-width: none;
+		margin: 0 !important;
+		padding: 0 1em !important;
+		list-style: none;
+		gap: 0;
+
+		&:not([style*='display: none']) {
+			display: flex;
+		}
+
+		&::before,
+		&::after {
+			height: 1px;
+			background: var(--shopify-grid-border);
+			content: '';
+			flex: 1 1 auto;
+		}
+
+		li {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+
+			&:first-child {
+				display: none;
+			}
+		}
+	}
+
+	.pagination-button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 176px;
+		min-height: 72px;
+		margin: 0;
+		padding: 0.75em 1.5em;
+		border: 0;
+		border-radius: 0;
 		background: transparent;
-		text-decoration: underline;
-		text-underline-offset: 0.25rem;
+		color: var(--shopify-grid-foreground);
+		font-family: inherit;
+		font-size: 0;
+		font-weight: 400;
+		line-height: 1;
+		letter-spacing: 0.1em;
+		text-align: center;
+		text-transform: uppercase;
+		box-shadow: none;
+		cursor: pointer;
+		appearance: none;
+
+		&::before {
+			font-size: 10px;
+			content: 'Load more';
+		}
+
+		&:hover {
+			background: transparent;
+			text-decoration: underline;
+			text-underline-offset: 0.25em;
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--shopify-grid-foreground);
+			outline-offset: -4px;
+		}
+
+		svg {
+			display: none;
+		}
 	}
 
-	&:focus-visible {
-		outline: 2px solid var(--homepage-product-foreground);
-		outline-offset: -4px;
+	/* ========================================================
+	 * Loading state
+	 * ======================================================== */
+
+	shopify-context:not([shopify-content-loaded]) {
+		min-height: 320px;
 	}
 
-	svg {
-		display: none;
+	/* ========================================================
+	 * Small devices: 576px and above
+	 * ======================================================== */
+
+	@include media-breakpoint-up(sm) {
+		--shopify-grid-details-height: 72px;
+
+		.collection-grid__grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+		}
+
+		.product-card__details {
+			padding: 0.75em clamp(0.875em, 2vw, 1.25em) 0.9em !important;
+		}
+	}
+
+	/* ========================================================
+	 * Large devices: 992px and above
+	 * ======================================================== */
+
+	@include media-breakpoint-up(lg) {
+		--shopify-grid-details-height: 74px;
+
+		.collection-grid__grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+		}
+
+		.product-card__details {
+			padding: 0.75em clamp(0.875em, 1.5vw, 1.5em) 1em !important;
+		}
+
+		.product-card__title {
+			font-size: clamp(10px, 0.68vw, 16px) !important;
+		}
+
+		.product-card__price {
+			font-size: clamp(8px, 0.54vw, 14px) !important;
+		}
+
+		.collection-pagination {
+			padding: 0 !important;
+		}
+	}
+
+	/* ========================================================
+	 * Extra-large devices: 1200px and above
+	 * ======================================================== */
+
+	@include media-breakpoint-up(xl) {
+		--shopify-grid-details-height: 80px;
+
+		.product-card__details {
+			padding: 0.9em clamp(1.25em, 1.6vw, 2em) 1.15em !important;
+		}
+	}
+
+	/* ========================================================
+	 * Reduced motion
+	 * ======================================================== */
+
+	@media (prefers-reduced-motion: reduce) {
+		*,
+		*::before,
+		*::after {
+			scroll-behavior: auto !important;
+			transition-duration: 0.01ms !important;
+			animation-duration: 0.01ms !important;
+			animation-iteration-count: 1 !important;
+		}
 	}
 }
 
 
 /* ============================================================
- * Loading state
+ * Shared collection animation
  * ============================================================ */
 
-.homepage-shopify shopify-context:not([shopify-content-loaded]) {
-	min-height: 20rem;
-}
-
-.homepage-shopify .product-card {
-	animation: homepage-product-reveal 350ms ease both;
-}
-
-@keyframes homepage-product-reveal {
+@keyframes shopify-product-reveal {
 	from {
 		opacity: 0;
-		transform: translateY(0.5rem);
+		transform: translateY(0.5em);
 	}
 
 	to {
@@ -2610,99 +2666,536 @@ body.home-splash-active {
 	}
 }
 
-
 /* ============================================================
- * Small devices
- * Bootstrap sm: 576px and above
+ * Shopify cart
  * ============================================================ */
 
-@include media-breakpoint-up(sm) {
-	.homepage-shopify {
-		--homepage-product-details-height: 4.5rem;
+shopify-cart#cart {
+	--cart-background: #fff;
+	--cart-foreground: #050505;
+	--cart-muted: #676767;
+	--cart-border: #d8d8d8;
+	--cart-button-background: #050505;
+	--cart-button-foreground: #fff;
+
+	font-family: inherit;
+	color: var(--cart-foreground);
+
+	/* ========================================================
+	 * Cart drawer
+	 * ======================================================== */
+
+	&::part(dialog) {
+		position: fixed;
+		inset: 0 0 0 auto;
+		width: 100vw;
+		max-width: none;
+		height: 100dvh;
+		max-height: none;
+		margin: 0;
+		padding: 24px 20px;
+		overflow-x: hidden;
+		overflow-y: auto;
+		border: 0;
+		border-radius: 0;
+		background: var(--cart-background);
+		color: var(--cart-foreground);
+		font-family: inherit;
+		box-shadow: -20px 0 60px rgb(0 0 0 / 14%);
 	}
 
-	.homepage-shopify .collection-grid__grid {
-		grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+	&::part(dialog)::backdrop {
+		background: rgb(0 0 0 / 38%);
+		backdrop-filter: blur(2px);
 	}
 
-	.homepage-shopify .product-card__details {
-		padding:
-			0.75rem
-			clamp(0.875rem, 2vw, 1.25rem)
-			0.9rem !important;
+	/* ========================================================
+	 * Product image
+	 * ======================================================== */
+
+	&::part(line-image) {
+		width: 92px;
+		min-width: 92px;
+		height: 112px;
+		overflow: hidden;
+		border: 0;
+		border-radius: 0;
+		background: #ededed;
+		object-fit: cover;
+	}
+
+	/* ========================================================
+	 * Product title
+	 * ======================================================== */
+
+	&::part(line-heading) {
+		margin: 0;
+		color: var(--cart-foreground);
+		font-family: inherit;
+		font-size: 13px;
+		font-weight: 700;
+		line-height: 1.15;
+		letter-spacing: 0;
+		text-transform: uppercase;
+	}
+
+	/* ========================================================
+	 * Product options
+	 * ======================================================== */
+
+	&::part(line-options) {
+		margin-top: 0.45em;
+		color: var(--cart-muted);
+		font-family: inherit;
+		font-size: 11px;
+		font-weight: 400;
+		line-height: 1.3;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+
+	/* ========================================================
+	 * Product price
+	 * ======================================================== */
+
+	&::part(line-price) {
+		color: var(--cart-foreground);
+		font-family: inherit;
+		font-size: 12px;
+		font-weight: 400;
+		line-height: 1.25;
+		white-space: nowrap;
+	}
+
+	/* ========================================================
+	 * Quantity, close and remove controls
+	 * ======================================================== */
+
+	&::part(secondary-button) {
+		min-width: 32px;
+		min-height: 32px;
+		padding: 0;
+		border: 1px solid var(--cart-border);
+		border-radius: 0;
+		background: transparent;
+		color: var(--cart-foreground);
+		fill: var(--cart-foreground);
+		font-family: inherit;
+		box-shadow: none;
+		transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+	}
+
+	&::part(secondary-button):hover {
+		border-color: var(--cart-foreground);
+		background: var(--cart-foreground);
+		color: var(--cart-background);
+		fill: var(--cart-background);
+	}
+
+	&::part(secondary-button):focus-visible {
+		outline: 2px solid var(--cart-foreground);
+		outline-offset: 2px;
+	}
+
+	/* ========================================================
+	 * Checkout button
+	 * ======================================================== */
+
+	&::part(primary-button) {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		min-height: 52px;
+		padding: 1em 1.5em;
+		border: 1px solid var(--cart-button-background);
+		border-radius: 0;
+		background: var(--cart-button-background);
+		color: var(--cart-button-foreground);
+		font-family: inherit;
+		font-size: 11px;
+		font-weight: 700;
+		line-height: 1;
+		letter-spacing: 0.08em;
+		text-align: center;
+		text-decoration: none;
+		text-transform: uppercase;
+		box-shadow: none;
+		transition: background-color 180ms ease, color 180ms ease;
+	}
+
+	&::part(primary-button):hover {
+		background: var(--cart-background);
+		color: var(--cart-foreground);
+	}
+
+	&::part(primary-button):focus-visible {
+		outline: 2px solid var(--cart-foreground);
+		outline-offset: 3px;
+	}
+
+	/* ========================================================
+	 * Discount controls
+	 * ======================================================== */
+
+	&::part(tertiary-button) {
+		min-height: 38px;
+		padding: 0.65em 1em;
+		border: 1px solid var(--cart-border);
+		border-radius: 0;
+		background: transparent;
+		color: var(--cart-foreground);
+		fill: var(--cart-foreground);
+		font-family: inherit;
+		font-size: 10px;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		box-shadow: none;
+	}
+
+	&::part(discount-code) {
+		padding: 0.5em 0.75em;
+		border: 1px solid var(--cart-foreground);
+		border-radius: 0;
+		background: transparent;
+		color: var(--cart-foreground);
+		font-family: inherit;
+		font-size: 10px;
+		letter-spacing: 0.04em;
+	}
+
+	&::part(input-field) {
+		width: 100%;
+		min-height: 44px;
+		padding: 0.75em 1em;
+		border: 1px solid var(--cart-border);
+		border-radius: 0;
+		background: var(--cart-background);
+		color: var(--cart-foreground);
+		font-family: inherit;
+		font-size: 12px;
+		box-shadow: none;
+	}
+
+	&::part(input-field):focus {
+		border-color: var(--cart-foreground);
+		outline: 1px solid var(--cart-foreground);
+	}
+
+	&::part(discount-error) {
+		color: #a01818;
+		font-family: inherit;
+		font-size: 10px;
+		line-height: 1.4;
+	}
+
+	/* ========================================================
+	 * Tablet and desktop drawer
+	 * ======================================================== */
+
+	@include media-breakpoint-up(md) {
+		&::part(dialog) {
+			width: min(100vw, 480px);
+			padding: 32px;
+			border-left: 1px solid var(--cart-border);
+		}
+
+		&::part(line-image) {
+			width: 108px;
+			min-width: 108px;
+			height: 128px;
+		}
+
+		&::part(line-heading) {
+			font-size: 14px;
+		}
+
+		&::part(line-price) {
+			font-size: 13px;
+		}
+	}
+
+	/* ========================================================
+	 * Reduced motion
+	 * ======================================================== */
+
+	@media (prefers-reduced-motion: reduce) {
+		&::part(dialog),
+		&::part(primary-button),
+		&::part(secondary-button),
+		&::part(tertiary-button) {
+			scroll-behavior: auto !important;
+			transition-duration: 0.01ms !important;
+			animation-duration: 0.01ms !important;
+		}
 	}
 }
 
-
 /* ============================================================
- * Large devices
- * Bootstrap lg: 992px and above
+ * Standalone Shopify cart page
  * ============================================================ */
 
-@include media-breakpoint-up(lg) {
-	.homepage-shopify {
-		--homepage-product-details-height: 4.625rem;
+.shopify-cart-content {
+	--cart-page-background: #fff;
+	--cart-page-foreground: #050505;
+	--cart-page-muted: #666;
+	--cart-page-border: #d8d8d8;
+	--cart-page-image-background: #ededed;
+	--cart-page-header-height: 110px;
+
+	display: flex;
+	width: 100%;
+	min-height: calc(100svh - var(--cart-page-header-height));
+	margin: 0;
+	padding: calc(var(--cart-page-header-height) + 32px) 20px 80px;
+	background: var(--cart-page-background);
+	color: var(--cart-page-foreground);
+
+	.shopify-cart-page {
+		width: 100%;
+		max-width: 1440px;
+		margin: 0 auto;
+		padding: 0;
 	}
 
-	.homepage-shopify .collection-grid__grid {
-		grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+	.cart-page-content {
+		width: 100%;
+		margin: 0;
+		padding: 0;
 	}
 
-	.homepage-shopify .product-card__details {
-		padding:
-			0.75rem
-			clamp(0.875rem, 1.5vw, 1.5rem)
-			1rem !important;
+	#cart-page-display {
+		display: block;
+		width: 100%;
+		max-width: none;
+		font-family: inherit;
+		color: var(--cart-page-foreground);
+
+		&::part(dialog) {
+			position: relative;
+			inset: auto;
+			display: block;
+			width: 100%;
+			max-width: none;
+			height: auto;
+			max-height: none;
+			margin: 0;
+			padding: 0;
+			overflow: visible;
+			border: 0 !important;
+			border-radius: 0 !important;
+			background: var(--cart-page-background);
+			color: var(--cart-page-foreground);
+			font-family: inherit;
+			box-shadow: none !important;
+		}
+
+		&::part(dialog)::backdrop {
+			display: none;
+			background: transparent;
+			backdrop-filter: none;
+		}
+
+		&::part(line-image) {
+			width: 110px;
+			min-width: 110px;
+			height: 132px;
+			overflow: hidden;
+			border: 0;
+			border-radius: 0;
+			background: var(--cart-page-image-background);
+			object-fit: cover;
+		}
+
+		&::part(line-heading) {
+			margin: 0;
+			color: var(--cart-page-foreground);
+			font-family: inherit;
+			font-size: 13px;
+			font-weight: 700;
+			line-height: 1.15;
+			letter-spacing: 0;
+			text-transform: uppercase;
+		}
+
+		&::part(line-options) {
+			margin-top: 0.45em;
+			color: var(--cart-page-muted);
+			font-family: inherit;
+			font-size: 10px;
+			font-weight: 400;
+			line-height: 1.3;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+		}
+
+		&::part(line-price) {
+			color: var(--cart-page-foreground);
+			font-family: inherit;
+			font-size: 12px;
+			font-weight: 400;
+			line-height: 1.25;
+			white-space: nowrap;
+		}
+
+		&::part(secondary-button) {
+			min-width: 34px;
+			min-height: 34px;
+			padding: 0;
+			border: 1px solid var(--cart-page-border);
+			border-radius: 0;
+			background: transparent;
+			color: var(--cart-page-foreground);
+			fill: var(--cart-page-foreground);
+			font-family: inherit;
+			box-shadow: none;
+			transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+		}
+
+		&::part(secondary-button):hover {
+			border-color: var(--cart-page-foreground);
+			background: var(--cart-page-foreground);
+			color: var(--cart-page-background);
+			fill: var(--cart-page-background);
+		}
+
+		&::part(secondary-button):focus-visible {
+			outline: 2px solid var(--cart-page-foreground);
+			outline-offset: 2px;
+		}
+
+		&::part(primary-button) {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 100%;
+			min-height: 56px;
+			padding: 1em 1.5em;
+			border: 1px solid var(--cart-page-foreground);
+			border-radius: 0;
+			background: var(--cart-page-foreground);
+			color: var(--cart-page-background);
+			font-family: inherit;
+			font-size: 11px;
+			font-weight: 700;
+			line-height: 1;
+			letter-spacing: 0.1em;
+			text-align: center;
+			text-decoration: none;
+			text-transform: uppercase;
+			box-shadow: none;
+			transition: background-color 180ms ease, color 180ms ease;
+		}
+
+		&::part(primary-button):hover {
+			background: var(--cart-page-background);
+			color: var(--cart-page-foreground);
+		}
+
+		&::part(primary-button):focus-visible {
+			outline: 2px solid var(--cart-page-foreground);
+			outline-offset: 3px;
+		}
+
+		&::part(tertiary-button) {
+			min-height: 40px;
+			padding: 0.7em 1em;
+			border: 1px solid var(--cart-page-border);
+			border-radius: 0;
+			background: transparent;
+			color: var(--cart-page-foreground);
+			fill: var(--cart-page-foreground);
+			font-family: inherit;
+			font-size: 10px;
+			font-weight: 400;
+			letter-spacing: 0.06em;
+			text-transform: uppercase;
+			box-shadow: none;
+		}
+
+		&::part(discount-code) {
+			padding: 0.5em 0.75em;
+			border: 1px solid var(--cart-page-foreground);
+			border-radius: 0;
+			background: transparent;
+			color: var(--cart-page-foreground);
+			font-family: inherit;
+			font-size: 10px;
+			letter-spacing: 0.04em;
+		}
+
+		&::part(input-field) {
+			width: 100%;
+			min-height: 46px;
+			padding: 0.75em 1em;
+			border: 1px solid var(--cart-page-border);
+			border-radius: 0;
+			background: var(--cart-page-background);
+			color: var(--cart-page-foreground);
+			font-family: inherit;
+			font-size: 12px;
+			box-shadow: none;
+		}
+
+		&::part(input-field):focus {
+			border-color: var(--cart-page-foreground);
+			outline: 1px solid var(--cart-page-foreground);
+		}
+
+		&::part(discount-error) {
+			color: #a01818;
+			font-family: inherit;
+			font-size: 10px;
+			line-height: 1.4;
+		}
 	}
 
-	.homepage-shopify .product-card__title {
-		font-size: clamp(0.625rem, 0.68vw, 0.75rem) !important;
+	@include media-breakpoint-up(md) {
+		--cart-page-header-height: 120px;
+
+		padding: calc(var(--cart-page-header-height) + 48px) clamp(32px, 5vw, 80px) 100px;
+
+		#cart-page-display {
+			&::part(line-image) {
+				width: 150px;
+				min-width: 150px;
+				height: 180px;
+			}
+
+			&::part(line-heading) {
+				font-size: clamp(13px, 1.1vw, 16px);
+			}
+
+			&::part(line-price) {
+				font-size: clamp(12px, 1vw, 15px);
+			}
+		}
 	}
 
-	.homepage-shopify .product-card__price {
-		font-size: clamp(0.5rem, 0.54vw, 0.625rem) !important;
+	@include media-breakpoint-up(lg) {
+		--cart-page-header-height: 130px;
+
+		padding: calc(var(--cart-page-header-height) + 64px) clamp(48px, 7vw, 120px) 120px;
+
+		#cart-page-display {
+			&::part(line-image) {
+				width: 190px;
+				min-width: 190px;
+				height: 228px;
+			}
+
+			&::part(primary-button) {
+				min-height: 60px;
+			}
+		}
 	}
 
-	.homepage-shopify .collection-pagination {
-		padding: 0 !important;
-	}
-}
-
-
-/* ============================================================
- * Extra-large devices
- * Bootstrap xl: 1200px and above
- * ============================================================ */
-
-@include media-breakpoint-up(xl) {
-	.homepage-shopify {
-		--homepage-product-details-height: 5rem;
-	}
-
-	.homepage-shopify .product-card__image-container {
-		aspect-ratio: 9 / 10;
-	}
-
-	.homepage-shopify .product-card__details {
-		padding:
-			0.9rem
-			clamp(1.25rem, 1.6vw, 2rem)
-			1.15rem !important;
-	}
-}
-
-
-/* ============================================================
- * Reduced motion
- * ============================================================ */
-
-@media (prefers-reduced-motion: reduce) {
-	.homepage-shopify *,
-	.homepage-shopify *::before,
-	.homepage-shopify *::after {
-		scroll-behavior: auto !important;
-		transition-duration: 0.01ms !important;
-		animation-duration: 0.01ms !important;
-		animation-iteration-count: 1 !important;
+	@media (prefers-reduced-motion: reduce) {
+		#cart-page-display::part(primary-button),
+		#cart-page-display::part(secondary-button),
+		#cart-page-display::part(tertiary-button) {
+			transition-duration: 0.01ms !important;
+			animation-duration: 0.01ms !important;
+		}
 	}
 }

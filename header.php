@@ -154,7 +154,7 @@
 					<button
 						class="header-utility header-cart header-cart--mobile"
 						type="button"
-						data-shopwp-cart-trigger
+						onclick="document.getElementById('cart').showModal();"
 					>
 						<?php esc_html_e( 'Cart', 'the-blue-print' ); ?>
 					</button>

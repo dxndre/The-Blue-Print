@@ -652,3 +652,43 @@ add_filter(
 		);
 	}
 );
+
+/**
+ * Add appropriate body classes to Shopify's standalone cart page.
+ */
+add_filter(
+	'body_class',
+	function ( $classes ) {
+		if ( empty( $_SERVER['REQUEST_URI'] ) ) {
+			return $classes;
+		}
+
+		$request_path = wp_parse_url(
+			wp_unslash( $_SERVER['REQUEST_URI'] ),
+			PHP_URL_PATH
+		);
+
+		$is_shopify_cart = (
+			is_string( $request_path ) &&
+			preg_match( '#/cart/?$#i', $request_path )
+		);
+
+		if ( ! $is_shopify_cart ) {
+			return $classes;
+		}
+
+		$classes = array_diff(
+			$classes,
+			array(
+				'blog',
+				'home',
+			)
+		);
+
+		$classes[] = 'shopify-cart-route';
+
+		return array_values(
+			array_unique( $classes )
+		);
+	}
+);
