@@ -24,7 +24,7 @@
 
 					<div class="col-md-2 social-icons-container">
 						<ul class="social-icons list-unstyled d-flex justify-content-end">
-							<li><a href="mailto:info@theblueprint.co.uk"><i class="fas fa-envelope"></i></a></li>
+							<li><a href="mailto:info@theblueprint.co.uk"><i class="fa-regular fa-envelope"></i></a></li>
 							<li><a href="https://www.instagram.com/theblueprint" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a></li>
 						</ul>
 					</div>

@@ -398,6 +398,247 @@ import * as bootstrap from 'bootstrap';
 	}
 
 	/**
+ 	* Enhance the standalone Shopify cart.
+	*
+	* Shopify's cart line items are rendered inside an open Shadow DOM.
+	* This fills each image container and links the image and title to
+	* the corresponding WordPress Shopify product route.
+	*/
+	function initStandaloneCartEnhancements() {
+		const cart = document.getElementById('cart-page-display');
+
+		if (!cart) {
+			return;
+		}
+
+		const productHandleOverrides = {
+			/*
+			* Add entries here only when a Shopify handle does not
+			* match the slugified product title.
+			*
+			* Example:
+			* 'My Product Name': 'different-shopify-handle',
+			*/
+		};
+
+		const getProductHandle = (productTitle) => {
+			if (productHandleOverrides[productTitle]) {
+				return productHandleOverrides[productTitle];
+			}
+
+			return productTitle
+				.toLowerCase()
+				.normalize('NFKD')
+				.replace(/[\u0300-\u036f]/g, '')
+				.replace(/&/g, 'and')
+				.replace(/[^a-z0-9]+/g, '-')
+				.replace(/^-+|-+$/g, '');
+		};
+
+		const getSiteUrl = () => {
+			const homeLink = document.querySelector(
+				'#header .header-logo'
+			);
+
+			if (homeLink instanceof HTMLAnchorElement) {
+				return homeLink.href.endsWith('/')
+					? homeLink.href
+					: `${homeLink.href}/`;
+			}
+
+			return `${window.location.origin}/`;
+		};
+
+		const createProductUrl = (productTitle) => {
+			const productHandle = getProductHandle(productTitle);
+
+			return new URL(
+				`products/${productHandle}/`,
+				getSiteUrl()
+			).href;
+		};
+
+		const addShadowStyles = (shadowRoot) => {
+			if (
+				shadowRoot.querySelector(
+					'[data-blueprint-cart-styles]'
+				)
+			) {
+				return;
+			}
+
+			const style = document.createElement('style');
+
+			style.dataset.blueprintCartStyles = '';
+
+			style.textContent = `
+				.line-image {
+					overflow: hidden !important;
+					border-radius: 0 !important;
+				}
+
+				.line-image > .blueprint-cart-product-link {
+					display: block;
+					width: 100%;
+					height: 100%;
+					overflow: hidden;
+					border-radius: 0;
+				}
+
+				.line-image img {
+					display: block !important;
+					width: 100% !important;
+					min-width: 100% !important;
+					max-width: none !important;
+					height: 100% !important;
+					min-height: 100% !important;
+					margin: 0 !important;
+					border-radius: 0 !important;
+					object-fit: cover !important;
+					object-position: center !important;
+				}
+
+				.line-heading > .blueprint-cart-product-link {
+					color: inherit;
+					font: inherit;
+					line-height: inherit;
+					text-decoration: none;
+				}
+
+				.line-heading > .blueprint-cart-product-link:hover {
+					text-decoration: underline;
+					text-underline-offset: 0.2em;
+				}
+
+				.line-heading > .blueprint-cart-product-link:focus-visible,
+				.line-image > .blueprint-cart-product-link:focus-visible {
+					outline: 2px solid currentColor;
+					outline-offset: 2px;
+				}
+			`;
+
+			shadowRoot.appendChild(style);
+		};
+
+		const wrapContentsWithLink = (
+			element,
+			productUrl,
+			accessibleLabel
+		) => {
+			if (
+				element.querySelector(
+					':scope > .blueprint-cart-product-link'
+				)
+			) {
+				return;
+			}
+
+			const link = document.createElement('a');
+
+			link.className = 'blueprint-cart-product-link';
+			link.href = productUrl;
+
+			if (accessibleLabel) {
+				link.setAttribute(
+					'aria-label',
+					accessibleLabel
+				);
+			}
+
+			while (element.firstChild) {
+				link.appendChild(element.firstChild);
+			}
+
+			element.appendChild(link);
+		};
+
+		const enhanceLineItems = () => {
+			const shadowRoot = cart.shadowRoot;
+
+			if (!shadowRoot) {
+				return false;
+			}
+
+			addShadowStyles(shadowRoot);
+
+			const lineItems = shadowRoot.querySelectorAll(
+				'.line-item-container'
+			);
+
+			lineItems.forEach((lineItem) => {
+				const heading = lineItem.querySelector(
+					'.line-heading'
+				);
+
+				const image = lineItem.querySelector(
+					'.line-image'
+				);
+
+				if (!heading) {
+					return;
+				}
+
+				const productTitle =
+					heading.textContent.trim();
+
+				if (!productTitle) {
+					return;
+				}
+
+				const productUrl =
+					createProductUrl(productTitle);
+
+				if (image) {
+					wrapContentsWithLink(
+						image,
+						productUrl,
+						`View ${productTitle}`
+					);
+				}
+
+				wrapContentsWithLink(
+					heading,
+					productUrl,
+					''
+				);
+			});
+
+			return true;
+		};
+
+		const observeCart = () => {
+			const shadowRoot = cart.shadowRoot;
+
+			if (!shadowRoot) {
+				window.requestAnimationFrame(observeCart);
+				return;
+			}
+
+			enhanceLineItems();
+
+			const observer = new MutationObserver(() => {
+				enhanceLineItems();
+			});
+
+			observer.observe(shadowRoot, {
+				childList: true,
+				subtree: true,
+			});
+		};
+
+		if (
+			window.customElements &&
+			typeof window.customElements.whenDefined === 'function'
+		) {
+			window.customElements
+				.whenDefined('shopify-cart')
+				.then(observeCart);
+		} else {
+			observeCart();
+		}
+	}
+
+	/**
 	 * Initialise the theme.
 	 */
 	function initTheme() {
@@ -407,6 +648,7 @@ import * as bootstrap from 'bootstrap';
 		initHomepageSplash();
 		initProductDialogs();
 		initProductImageSliders();
+		initStandaloneCartEnhancements();
 	}
 
 	if (document.readyState === 'loading') {

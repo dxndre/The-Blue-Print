@@ -624,7 +624,21 @@ img {
 	.header-cart--mobile {
 		grid-column: 3;
 		justify-self: end;
-		white-space: nowrap;
+		width: 32px;
+		height: 32px;
+		padding: 0;
+		font-size: 17px;
+
+		i {
+			display: block;
+			color: inherit;
+			font-size: inherit;
+			line-height: 1;
+		}
+
+		@include media-breakpoint-up(lg) {
+			display: none;
+		}
 	}
 
 	/* ======================================================================
@@ -778,6 +792,7 @@ img {
 			&:hover,
 			&:focus-visible {
 				color: inherit;
+				transition: 0.2s all ease;
 			}
 
 			&:hover::after,
@@ -2241,6 +2256,10 @@ body.home-splash-active {
 			li {
 				a {
 					color: black;
+
+					&:hover {
+						color: black;
+					}
 				}
 			}
 		}
@@ -2609,11 +2628,11 @@ body.home-splash-active {
 		}
 
 		.product-card__title {
-			font-size: clamp(10px, 0.68vw, 16px) !important;
+			font-size: clamp(12px, 14px, 16px) !important;
 		}
 
 		.product-card__price {
-			font-size: clamp(8px, 0.54vw, 14px) !important;
+			font-size: clamp(10px, 12px, 14px) !important;
 		}
 
 		.collection-pagination {
@@ -2722,6 +2741,17 @@ shopify-cart#cart {
 		border-radius: 0;
 		background: #ededed;
 		object-fit: cover;
+	}
+
+	.line-item {
+		.line-image {
+			img {
+				width: 100% !important;
+				height: 100% !important;
+				object-fit: cover;
+				object-position: center;
+			}
+		}
 	}
 
 	/* ========================================================
@@ -3011,7 +3041,7 @@ shopify-cart#cart {
 			margin: 0;
 			color: var(--cart-page-foreground);
 			font-family: inherit;
-			font-size: 13px;
+			font-size: 14px;
 			font-weight: 700;
 			line-height: 1.15;
 			letter-spacing: 0;

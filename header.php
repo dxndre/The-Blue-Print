@@ -155,8 +155,16 @@
 						class="header-utility header-cart header-cart--mobile"
 						type="button"
 						onclick="document.getElementById('cart').showModal();"
+						aria-label="<?php esc_attr_e( 'Open shopping cart', 'the-blue-print' ); ?>"
 					>
-						<?php esc_html_e( 'Cart', 'the-blue-print' ); ?>
+						<i
+							class="fa-solid fa-bag-shopping"
+							aria-hidden="true"
+						></i>
+
+						<span class="visually-hidden">
+							<?php esc_html_e( 'Cart', 'the-blue-print' ); ?>
+						</span>
 					</button>
 				</div>
 
