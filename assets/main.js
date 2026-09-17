@@ -790,6 +790,75 @@ import * as bootstrap from 'bootstrap';
 	}
 
 	/**
+	 * Remove image rounding inside Shopify's cart shadow DOM.
+	 */
+	function initShopifyCartImageStyles() {
+		const applyCartStyles = () => {
+			const cart = document.querySelector('shopify-cart');
+
+			if (!cart || !cart.shadowRoot) {
+				return false;
+			}
+
+			if (cart.shadowRoot.getElementById('blueprintCartImageStyles')) {
+				return true;
+			}
+
+			const style = document.createElement('style');
+
+			style.id = 'blueprintCartImageStyles';
+
+			style.textContent = `
+				.line-image,
+				.line-image.img-placeholder,
+				.line-image img {
+					border-radius: 0 !important;
+					clip-path: none !important;
+				}
+
+				.line-image {
+					overflow: hidden !important;
+				}
+
+				.line-image img {
+					display: block !important;
+					width: 100% !important;
+					height: 100% !important;
+					object-fit: cover !important;
+				}
+			`;
+
+			cart.shadowRoot.appendChild(style);
+
+			return true;
+		};
+
+		let attempts = 0;
+		const maximumAttempts = 100;
+
+		const waitForCart = () => {
+			attempts += 1;
+
+			if (applyCartStyles() || attempts >= maximumAttempts) {
+				return;
+			}
+
+			window.setTimeout(waitForCart, 100);
+		};
+
+		if (
+			window.customElements &&
+			typeof window.customElements.whenDefined === 'function'
+		) {
+			window.customElements
+				.whenDefined('shopify-cart')
+				.then(waitForCart);
+		} else {
+			waitForCart();
+		}
+	}
+
+	/**
 	 * Initialise the theme.
 	 */
 	function initTheme() {
@@ -801,6 +870,7 @@ import * as bootstrap from 'bootstrap';
 		initProductImageSliders();
 		initStandaloneCartEnhancements();
 		initProductSearch();
+		initShopifyCartImageStyles();
 	}
 
 	if (document.readyState === 'loading') {
