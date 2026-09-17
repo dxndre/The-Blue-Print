@@ -692,3 +692,8 @@ add_filter(
 		);
 	}
 );
+
+/**
+ * Loading The Blue Print Access Gate.
+ */
+require_once get_template_directory() . '/inc/access-gate.php';
