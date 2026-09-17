@@ -653,6 +653,10 @@ img {
 		--header-colour: #fff;
 		--header-background: transparent;
 
+		// @include media-breakpoint-up(md) {
+		// 	--header-colour: #fff;
+		// }
+
 		background: linear-gradient(180deg, rgb(0 0 0 / 50%) 0%, rgb(0 0 0 / 0%) 100%);
 		box-shadow: none;
 
@@ -3305,12 +3309,6 @@ shopify-cart#cart {
 			transition-duration: 0.01ms !important;
 			animation-duration: 0.01ms !important;
 		}
-	}
-}
-
-shopify-cart {
-	&::part(line-image) {
-		border-radius: 0 !important;
 	}
 }
 
