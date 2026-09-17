@@ -186,6 +186,10 @@ body {
 		}
 	}
 
+	&.product-search-open {
+		overflow: hidden;
+	}
+
 	section {
 		margin: 4em 0;
 
@@ -817,53 +821,189 @@ img {
 	 * ====================================================================== */
 
 	.header-search,
-	#searchCollapse {
-		position: absolute;
-		z-index: 999;
-		top: 100%;
-		right: 0;
-		left: 0;
-		padding: 24px var(--header-horizontal-padding);
+	.product-search {
+		width: 100%;
+		max-width: none;
+		height: 100dvh;
+		max-height: none;
+		margin: 0;
+		padding: 0;
+		border: 0;
+		background: transparent;
 		color: #000;
-		background: rgb(255 255 255 / 96%);
-		box-shadow: 0 20px 35px rgb(0 0 0 / 8%);
-		backdrop-filter: blur(20px);
-		-webkit-backdrop-filter: blur(20px);
+		overflow: hidden;
 
-		.search-form {
-			width: min(100%, 700px);
-			min-width: 0;
-			margin-left: auto;
+		&::backdrop {
+			background: rgba(0, 0, 0, 0.72);
+			backdrop-filter: blur(4px);
 		}
 
-		.input-group {
-			display: block;
-		}
-
-		.form-control {
-			display: block;
+		&__panel {
+			position: absolute;
+			top: 0;
+			right: 0;
 			width: 100%;
-			padding: 12px 0;
-			border: 0;
-			border-bottom: 1px solid #000;
+			height: 100%;
+			padding: 24px;
+			background: #fff;
+			overflow-y: auto;
+
+			@include media-breakpoint-up(md) {
+				width: min(700px, 55vw);
+				padding: 40px;
+			}
+		}
+
+		&__header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 20px;
+			margin-bottom: 36px;
+		}
+
+		&__title {
+			margin: 0;
+			font-size: 2em;
+			font-weight: 700;
+			line-height: 1;
+			text-transform: uppercase;
+
+			@include media-breakpoint-up(md) {
+				font-size: 2.75em;
+			}
+		}
+
+		&__close {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 42px;
+			height: 42px;
+			padding: 0;
+			border: 1px solid #000;
 			border-radius: 0;
 			background: transparent;
 			color: #000;
-			font-size: 18px;
-			line-height: 1.3;
-			outline: none;
+			font-size: 1.25em;
+			cursor: pointer;
+			transition: background-color 180ms ease, color 180ms ease;
+
+			&:hover,
+			&:focus-visible {
+				background: #000;
+				color: #fff;
+			}
+		}
+
+		&__form {
+			position: relative;
+			border-bottom: 2px solid #000;
+		}
+
+		&__input {
+			display: block;
+			width: 100%;
+			height: 60px;
+			padding: 0 52px 0 0;
+			border: 0;
+			border-radius: 0;
+			outline: 0;
+			background: transparent;
+			color: #000;
+			font-size: 1.25em;
+			font-weight: 600;
+			text-transform: uppercase;
 			box-shadow: none;
 
 			&::placeholder {
-				color: rgb(0 0 0 / 55%);
+				color: #777;
+				opacity: 1;
 			}
 
-			&:hover,
-			&:focus,
-			&:focus-visible {
-				border-bottom-color: #000;
-				outline: none;
+			&:focus {
+				border: 0;
+				outline: 0;
 				box-shadow: none;
+			}
+		}
+
+		&__icon {
+			position: absolute;
+			top: 50%;
+			right: 0;
+			transform: translateY(-50%);
+			font-size: 1.1em;
+			pointer-events: none;
+		}
+
+		&__status {
+			margin: 18px 0 28px;
+			color: #666;
+			font-size: 0.75em;
+			letter-spacing: 0.06em;
+			text-transform: uppercase;
+		}
+
+		&__results {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 28px 12px;
+
+			@include media-breakpoint-up(md) {
+				gap: 36px 20px;
+			}
+		}
+
+		.product-search-card {
+			display: block;
+			color: #000;
+			text-decoration: none;
+
+			&[hidden] {
+				display: none !important;
+			}
+
+			&__media {
+				position: relative;
+				width: 100%;
+				aspect-ratio: 4 / 5;
+				background: #f1f1f1;
+				overflow: hidden;
+
+				shopify-media,
+				img {
+					display: block;
+					width: 100%;
+					height: 100%;
+					border-radius: 0;
+					object-fit: cover;
+					transition: transform 300ms ease;
+				}
+			}
+
+			&__details {
+				padding-top: 12px;
+			}
+
+			&__title {
+				margin: 0;
+				font-size: 0.78em;
+				font-weight: 700;
+				line-height: 1.25;
+				text-transform: uppercase;
+			}
+
+			&__price {
+				margin: 5px 0 0;
+				font-size: 0.7em;
+				line-height: 1.25;
+				text-transform: uppercase;
+			}
+
+			&:hover .product-search-card__media shopify-media,
+			&:hover .product-search-card__media img {
+				transform: scale(1.025);
 			}
 		}
 	}
@@ -2248,10 +2388,12 @@ body.home-splash-active {
 	#header {
 		background: transparent;
 
-		img {
-			filter: invert(1) !important;
+		.header-logo {
+			img {
+				filter: invert(1) !important;
+			}
 		}
-
+		
 		nav {
 			li {
 				a {

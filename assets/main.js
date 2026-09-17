@@ -639,6 +639,157 @@ import * as bootstrap from 'bootstrap';
 	}
 
 	/**
+	 * Shopify product search
+	 */
+	function initProductSearch() {
+		const dialog = document.getElementById('productSearchDialog');
+		const input = document.getElementById('productSearchInput');
+
+		if (!dialog || !input) {
+			return;
+		}
+
+		const results = dialog.querySelector('[data-product-search-results]');
+		const status = dialog.querySelector('[data-product-search-status]');
+		const openButtons = document.querySelectorAll(
+			'.js-product-search-toggle > a, a.js-product-search-toggle'
+		);
+		const closeButtons = dialog.querySelectorAll(
+			'[data-product-search-close]'
+		);
+
+		const getProductCards = () => {
+			return Array.from(
+				dialog.querySelectorAll('.product-search-card')
+			);
+		};
+
+		const resetSearch = () => {
+			input.value = '';
+
+			getProductCards().forEach((card) => {
+				card.hidden = true;
+			});
+
+			status.textContent = 'Start typing to search products.';
+		};
+
+		const filterProducts = () => {
+			const searchTerm = input.value.trim().toLowerCase();
+			const cards = getProductCards();
+
+			if (!searchTerm) {
+				cards.forEach((card) => {
+					card.hidden = true;
+				});
+
+				status.textContent = 'Start typing to search products.';
+				return;
+			}
+
+			let matchCount = 0;
+
+			cards.forEach((card) => {
+				const titleElement = card.querySelector(
+					'[data-product-search-title]'
+				);
+
+				const productTitle = titleElement
+					? titleElement.textContent.trim().toLowerCase()
+					: '';
+
+				const isMatch = productTitle.includes(searchTerm);
+
+				card.hidden = !isMatch;
+
+				if (isMatch) {
+					matchCount += 1;
+				}
+			});
+
+			if (matchCount === 0) {
+				status.textContent = 'No products found.';
+			} else if (matchCount === 1) {
+				status.textContent = '1 product found.';
+			} else {
+				status.textContent = `${matchCount} products found.`;
+			}
+		};
+
+		const openSearch = () => {
+			if (typeof dialog.showModal === 'function') {
+				dialog.showModal();
+			} else {
+				dialog.setAttribute('open', '');
+			}
+
+			document.body.classList.add('product-search-open');
+
+			const mobileMenu = document.getElementById('navbar');
+
+			if (mobileMenu && mobileMenu.classList.contains('show')) {
+				bootstrap.Collapse.getOrCreateInstance(mobileMenu).hide();
+			}
+
+			window.setTimeout(() => {
+				input.focus();
+			}, 50);
+		};
+
+		const closeSearch = () => {
+			if (typeof dialog.close === 'function') {
+				dialog.close();
+			} else {
+				dialog.removeAttribute('open');
+			}
+
+			document.body.classList.remove('product-search-open');
+			resetSearch();
+		};
+
+		openButtons.forEach((button) => {
+			button.addEventListener('click', (event) => {
+				event.preventDefault();
+				openSearch();
+			});
+		});
+
+		closeButtons.forEach((button) => {
+			button.addEventListener('click', closeSearch);
+		});
+
+		input.addEventListener('input', filterProducts);
+
+		dialog.addEventListener('click', (event) => {
+			if (event.target === dialog) {
+				closeSearch();
+			}
+		});
+
+		dialog.addEventListener('close', () => {
+			document.body.classList.remove('product-search-open');
+			resetSearch();
+		});
+
+		/*
+		* Shopify renders product cards asynchronously.
+		* Reapply the current search when new cards appear.
+		*/
+		if (results) {
+			const observer = new MutationObserver(() => {
+				filterProducts();
+			});
+
+			observer.observe(results, {
+				childList: true,
+				subtree: true,
+			});
+		}
+
+		resetSearch();
+	}
+
+	/**
 	 * Initialise the theme.
 	 */
 	function initTheme() {
@@ -649,6 +800,7 @@ import * as bootstrap from 'bootstrap';
 		initProductDialogs();
 		initProductImageSliders();
 		initStandaloneCartEnhancements();
+		initProductSearch();
 	}
 
 	if (document.readyState === 'loading') {

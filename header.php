@@ -169,26 +169,100 @@
 				</div>
 
 				<?php if ( '1' === $search_enabled ) : ?>
-					<div id="searchCollapse" class="collapse header-search">
-						<form
-							class="search-form"
-							role="search"
-							method="get"
-							action="<?php echo esc_url( home_url( '/' ) ); ?>"
-						>
-							<label class="visually-hidden" for="headerSearchInput">
-								<?php esc_html_e( 'Search', 'the-blue-print' ); ?>
-							</label>
+					<dialog
+						id="productSearchDialog"
+						class="product-search"
+						aria-labelledby="productSearchTitle"
+					>
+						<div class="product-search__panel">
+							<div class="product-search__header">
+								<h2 id="productSearchTitle" class="product-search__title">
+									<?php esc_html_e( 'Search', 'the-blue-print' ); ?>
+								</h2>
 
-							<input
-								id="headerSearchInput"
-								type="search"
-								name="s"
-								class="form-control"
-								placeholder="<?php esc_attr_e( 'Search', 'the-blue-print' ); ?>"
-							/>
-						</form>
-					</div>
+								<button
+									class="product-search__close"
+									type="button"
+									data-product-search-close
+									aria-label="<?php esc_attr_e( 'Close product search', 'the-blue-print' ); ?>"
+								>
+									<i class="fa-solid fa-xmark" aria-hidden="true"></i>
+								</button>
+							</div>
+
+							<div class="product-search__form">
+								<label
+									class="visually-hidden"
+									for="productSearchInput"
+								>
+									<?php esc_html_e( 'Search products', 'the-blue-print' ); ?>
+								</label>
+
+								<input
+									id="productSearchInput"
+									class="product-search__input"
+									type="search"
+									placeholder="<?php esc_attr_e( 'Search products', 'the-blue-print' ); ?>"
+									autocomplete="off"
+									spellcheck="false"
+								/>
+
+								<i
+									class="fa-solid fa-magnifying-glass product-search__icon"
+									aria-hidden="true"
+								></i>
+							</div>
+
+							<p
+								class="product-search__status"
+								data-product-search-status
+								aria-live="polite"
+							>
+								<?php esc_html_e( 'Start typing to search products.', 'the-blue-print' ); ?>
+							</p>
+
+							<div
+								class="product-search__results"
+								data-product-search-results
+							>
+								<shopify-list-context
+									type="product"
+									query="products"
+									first="100"
+									sort-key="TITLE"
+								>
+									<template>
+										<a
+											class="product-search-card"
+											shopify-attr--href="'/products/' + product.handle"
+											hidden
+										>
+											<div class="product-search-card__media">
+												<shopify-media
+													query="product.selectedOrFirstAvailableVariant.image"
+													width="600"
+													height="750"
+												></shopify-media>
+											</div>
+
+											<div class="product-search-card__details">
+												<h3
+													class="product-search-card__title"
+													data-product-search-title
+												>
+													<shopify-data query="product.title"></shopify-data>
+												</h3>
+
+												<p class="product-search-card__price">
+													<shopify-money query="product.selectedOrFirstAvailableVariant.price"></shopify-money>
+												</p>
+											</div>
+										</a>
+									</template>
+								</shopify-list-context>
+							</div>
+						</div>
+					</dialog>
 				<?php endif; ?>
 
 				<!-- Existing mobile drawer -->
