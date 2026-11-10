@@ -117,7 +117,7 @@ $redirect_url = tbp_gate_requested_url();
 				</p>
 			<?php else : ?>
 				<p class="access-gate__message">
-					<?php esc_html_e( 'Enter your approved email address for access.', 'the-blue-print' ); ?>
+					<?php esc_html_e( 'Enter your email address to explore The Blue Print.', 'the-blue-print' ); ?>
 				</p>
 			<?php endif; ?>
 		</form>
