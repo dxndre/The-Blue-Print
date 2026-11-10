@@ -571,3 +571,27 @@ function tbp_gate_customizer_settings( $wp_customize ) {
 	);
 }
 add_action( 'customize_register', 'tbp_gate_customizer_settings' );
+
+/**
+ * Prevent shared caching of protected HTML pages.
+ */
+function tbp_gate_disable_html_cache() {
+    if ( is_admin() || wp_doing_ajax() || wp_doing_cron() ) {
+        return;
+    }
+
+    if ( ! defined( 'DONOTCACHEPAGE' ) ) {
+        define( 'DONOTCACHEPAGE', true );
+    }
+}
+add_action( 'init', 'tbp_gate_disable_html_cache', 0 );
+
+function tbp_gate_send_no_cache_headers() {
+    if ( is_admin() || wp_doing_ajax() || wp_doing_cron() ) {
+        return;
+    }
+
+    nocache_headers();
+    header( 'Cache-Control: private, no-store, no-cache, must-revalidate, max-age=0', true );
+}
+add_action( 'send_headers', 'tbp_gate_send_no_cache_headers', 20 );
