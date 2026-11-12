@@ -3232,7 +3232,7 @@ shopify-cart#cart {
 	/* ========================================================
 	 * Discount controls
 	 * ======================================================== */
-
+	
 	&::part(tertiary-button) {
 		min-height: 38px;
 		padding: 0.65em 1em;
@@ -3246,6 +3246,8 @@ shopify-cart#cart {
 		letter-spacing: 0.06em;
 		text-transform: uppercase;
 		box-shadow: none;
+		display: flex;
+		align-items: center;
 	}
 
 	&::part(discount-code) {
@@ -3506,6 +3508,8 @@ shopify-cart#cart {
 			letter-spacing: 0.06em;
 			text-transform: uppercase;
 			box-shadow: none;
+			display: flex;
+			align-items: center;
 		}
 
 		&::part(discount-code) {
@@ -3540,8 +3544,9 @@ shopify-cart#cart {
 		&::part(discount-error) {
 			color: #a01818;
 			font-family: inherit;
-			font-size: 10px;
+			font-size: 12px;
 			line-height: 1.4;
+			text-transform: uppercase;
 		}
 	}
 
