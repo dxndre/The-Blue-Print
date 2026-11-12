@@ -1583,6 +1583,11 @@ body.home-splash-active {
 
 	img {
 		margin-bottom: 8px;
+		max-width: 45px;
+
+		@include media-breakpoint-up(md) {
+			max-width: none;
+		}
 	}
 
 	.menu-item {
@@ -1901,9 +1906,9 @@ body.home-splash-active {
 	display: inline-block;
 }
 
-.blueprint-pdp__price shopify-money:first-child::before {
-	content: 'Black // ';
-}
+// .blueprint-pdp__price shopify-money:first-child::before {
+// 	content: 'Black // ';
+// }
 
 .blueprint-pdp__compare-price {
 	color: var(--pdp-colour-muted);
@@ -2606,6 +2611,10 @@ body.home-splash-active {
 			img {
 				filter: invert(1) !important;
 			}
+		}
+
+		.header-mobile {
+			color: black;
 		}
 		
 		nav {

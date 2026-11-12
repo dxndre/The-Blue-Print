@@ -18,14 +18,14 @@
 				<div class="row">
 					<div class="col-md-10">
 						<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/house.png' ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" />
-						<p><?php printf( esc_html__( '&copy; %1$s %2$s', 'the-blue-print' ), wp_date( 'Y' ), get_bloginfo( 'name', 'display' ) ); ?> by <a href="https://www.dxndre.co.uk" target="_blank" rel="noopener noreferrer">DXNDRE</a>.</p>
+						<p><?php printf( esc_html__( '&copy; %1$s - %2$s %3$s', 'the-blue-print' ), '2018', wp_date( 'Y' ), get_bloginfo( 'name', 'display' ) ); ?>.</p>
 						<p>All Rights Reserved. The Blue Print and the House Logo are registered trademarks of The Blue Print.</p>
 					</div>
 
 					<div class="col-md-2 social-icons-container">
 						<ul class="social-icons list-unstyled d-flex justify-content-end">
-							<li><a href="mailto:info@theblueprint.co.uk"><i class="fa-regular fa-envelope"></i></a></li>
-							<li><a href="https://www.instagram.com/theblueprint" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a></li>
+							<li><a href="mailto:studio@theblueprint13.com"><i class="fa-regular fa-envelope"></i></a></li>
+							<li><a href="https://www.instagram.com/theblueprintltd" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a></li>
 						</ul>
 					</div>
 
