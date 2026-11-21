@@ -885,44 +885,126 @@ import * as bootstrap from 'bootstrap';
 })();
 
 (() => {
-  const path = window.location.pathname.replace(/\/+$/, "");
+  const productPath = "/products/leather-cargo-trousers";
+  const label = "Pre-Order Only";
+  const emailLink =
+    "mailto:studio@theblueprint13.com?subject=" +
+    encodeURIComponent("Pre-order enquiry: Leather Cargo Trousers");
 
-  if (path !== "/products/leather-cargo-trousers") return;
+  function isTargetUrl(value) {
+    if (!value) return false;
 
-  function applyPreOrderDisplay() {
-    document.querySelectorAll(".blueprint-pdp__price").forEach((price) => {
-      if (!price.querySelector("[data-blueprint-preorder-price]")) {
-        const label = document.createElement("span");
-        label.dataset.blueprintPreorderPrice = "true";
-        label.textContent = "Pre-Order Only";
-        price.replaceChildren(label);
-      }
+    try {
+      const url = new URL(value, window.location.origin);
+      return (
+        url.origin === window.location.origin &&
+        url.pathname.replace(/\/+$/, "") === productPath
+      );
+    } catch {
+      return false;
+    }
+  }
+
+  function setLabel(element) {
+    if (!element) return;
+
+    if (
+      element.childNodes.length === 1 &&
+      element.firstChild.nodeType === Node.TEXT_NODE &&
+      element.textContent === label
+    ) return;
+
+    element.replaceChildren(document.createTextNode(label));
+  }
+
+  function replaceWithEmailLink(element) {
+    const link = document.createElement("a");
+
+    link.className = element.className;
+    link.href = emailLink;
+    link.textContent = label;
+    link.dataset.blueprintPreorderLink = "true";
+    link.setAttribute(
+      "aria-label",
+      "Email a pre-order enquiry for Leather Cargo Trousers"
+    );
+
+    Object.assign(link.style, {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      textDecoration: "none"
     });
 
+    element.replaceWith(link);
+  }
+
+  function applyChanges() {
+    // Product page.
+    if (isTargetUrl(window.location.href)) {
+      document
+        .querySelectorAll(".blueprint-pdp__price")
+        .forEach(setLabel);
+
+      document
+        .querySelectorAll(
+          ".blueprint-pdp__purchase button.blueprint-pdp__add-button," +
+          ".blueprint-pdp__purchase a.blueprint-pdp__add-button"
+        )
+        .forEach((element) => {
+          if (element.dataset.blueprintPreorderLink !== "true") {
+            replaceWithEmailLink(element);
+          }
+        });
+    }
+
+    // Homepage, archive and search cards using this markup.
+    document.querySelectorAll(".product-card").forEach((card) => {
+      const matchesProduct = Array.from(
+        card.querySelectorAll("a.product__link[href]")
+      ).some((link) => isTargetUrl(link.getAttribute("href")));
+
+      if (!matchesProduct) return;
+
+      card
+        .querySelectorAll(".product-card__price")
+        .forEach(setLabel);
+
+      card
+        .querySelectorAll("button.product-card__hover-button")
+        .forEach(replaceWithEmailLink);
+    });
+
+	// Search overlay results.
     document
-      .querySelectorAll("button.blueprint-pdp__add-button")
-      .forEach((button) => {
-        const link = document.createElement("a");
-        link.className = button.className;
-        link.textContent = "Pre-Order Only";
-        link.href =
-          "mailto:info@theblueprint13.co.uk?subject=" +
-          encodeURIComponent("Pre-order enquiry: Leather Cargo Trousers");
+      .querySelectorAll("a.product-search-card[href]")
+      .forEach((card) => {
+        if (!isTargetUrl(card.getAttribute("href"))) return;
 
-        link.style.display = "flex";
-        link.style.alignItems = "center";
-        link.style.justifyContent = "center";
-        link.style.textDecoration = "none";
-
-        button.replaceWith(link);
+        card
+          .querySelectorAll(".product-search-card__price")
+          .forEach(setLabel);
       });
   }
 
-  applyPreOrderDisplay();
+  let scheduled = false;
 
-  const observer = new MutationObserver(applyPreOrderDisplay);
+  const observer = new MutationObserver(() => {
+    if (scheduled) return;
+
+    scheduled = true;
+    requestAnimationFrame(() => {
+      scheduled = false;
+      applyChanges();
+    });
+  });
+
+  applyChanges();
+
   observer.observe(document.documentElement, {
     childList: true,
-    subtree: true
+    subtree: true,
+    attributes: true,
+    attributeFilter: ["href"]
   });
 })();
