@@ -883,3 +883,46 @@ import * as bootstrap from 'bootstrap';
 		initTheme();
 	}
 })();
+
+(() => {
+  const path = window.location.pathname.replace(/\/+$/, "");
+
+  if (path !== "/products/leather-cargo-trousers") return;
+
+  function applyPreOrderDisplay() {
+    document.querySelectorAll(".blueprint-pdp__price").forEach((price) => {
+      if (!price.querySelector("[data-blueprint-preorder-price]")) {
+        const label = document.createElement("span");
+        label.dataset.blueprintPreorderPrice = "true";
+        label.textContent = "Pre-Order Only";
+        price.replaceChildren(label);
+      }
+    });
+
+    document
+      .querySelectorAll("button.blueprint-pdp__add-button")
+      .forEach((button) => {
+        const link = document.createElement("a");
+        link.className = button.className;
+        link.textContent = "Pre-Order Only";
+        link.href =
+          "mailto:info@theblueprint13.co.uk?subject=" +
+          encodeURIComponent("Pre-order enquiry: Leather Cargo Trousers");
+
+        link.style.display = "flex";
+        link.style.alignItems = "center";
+        link.style.justifyContent = "center";
+        link.style.textDecoration = "none";
+
+        button.replaceWith(link);
+      });
+  }
+
+  applyPreOrderDisplay();
+
+  const observer = new MutationObserver(applyPreOrderDisplay);
+  observer.observe(document.documentElement, {
+    childList: true,
+    subtree: true
+  });
+})();
